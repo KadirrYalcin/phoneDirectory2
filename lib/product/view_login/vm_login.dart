@@ -8,7 +8,26 @@ class VMLogin with ChangeNotifier {
       TextEditingController();
   static final TextEditingController passwordTextEditingController =
       TextEditingController();
+  bool isClickalbe = false;
   bool rememberMe = false;
+  VMLogin() {
+    emailTextEditingController.addListener(() {
+      changeClickable();
+    });
+    passwordTextEditingController.addListener(() {
+      changeClickable();
+    });
+  }
+  void changeClickable() {
+    if (emailTextEditingController.text.isNotEmpty &&
+        passwordTextEditingController.text.isNotEmpty) {
+      isClickalbe = true;
+    } else {
+      isClickalbe = false;
+    }
+    notifyListeners();
+  }
+
   void showForgotPassword() {}
   void goToRegister({required BuildContext context}) {
     Navigator.push(context,

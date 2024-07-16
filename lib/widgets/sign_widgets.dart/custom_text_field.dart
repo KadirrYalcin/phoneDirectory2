@@ -7,38 +7,44 @@ final class CustomTextField extends StatefulWidget {
       {super.key,
       required this.hintText,
       required this.controller,
-      this.ishowable = false});
+      this.showable = false});
   final String hintText;
   final TextEditingController controller;
-  final bool ishowable;
+  final bool showable;
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
 }
 
 class _CustomTextFieldState extends State<CustomTextField> {
+  bool isEmpty = true;
   bool isVisible = true;
   @override
   Widget build(BuildContext context) {
     MediaQuery.sizeOf(context);
     var outlineInputBorder = OutlineInputBorder(
         borderSide: BorderSide(
-          color: UIColors.lightGrey,
+          color: isEmpty ? UIColors.borderGrey : UIColors.borderGreen,
         ),
-        borderRadius: BorderRadius.all(Radius.circular(16.0)));
+        borderRadius: const BorderRadius.all(Radius.circular(16.0)));
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: TextField(
-        obscureText: isVisible,
+        onChanged: (value) => setState(() {
+          isEmpty = value.isEmpty;
+        }),
+        obscureText: widget.showable ? isVisible : false,
         decoration: InputDecoration(
           enabledBorder: outlineInputBorder,
           focusedBorder: outlineInputBorder,
           hintText: widget.hintText,
-          fillColor: UIColors.textFieldBackground,
+          fillColor: isEmpty
+              ? UIColors.textFieldBackgroundWhite
+              : UIColors.textFieldBackgroundGreen,
           filled: true,
           contentPadding:
               const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-          suffixIcon: widget.ishowable ? eyeSuffix() : null,
+          suffixIcon: widget.showable ? eyeSuffix() : null,
         ),
         controller: widget.controller,
       ),

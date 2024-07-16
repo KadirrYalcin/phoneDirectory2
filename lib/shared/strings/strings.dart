@@ -1,9 +1,9 @@
-class SignStrings {
+class Strings {
   static const loginTitle = "Giriş yap";
   static const registerTitle = "Kayıt ol";
   static const emailHintText = "E-mail";
   static const passwordHintText = "Şifre";
-  static const rememberMe = "Şifre";
+  static const or = "Veya";
   static const loginButonTitle = "Giriş yap";
   static const checkboxTitle = "Beni hatırla";
   static const forgotPassword = "Şifremi unuttum";
@@ -16,4 +16,17 @@ class SignStrings {
   static const goToLogin = "Giriş yap";
   static const nameSurnameHintText = "Ad Soyad";
   static const passwordAgainHintText = "Şifre Tekrardan";
+  static const searcBarHintText = "Ara";
+  static const detailTitle = "Kişi Detay";
+  static const message = "Mesaj";
+  static const phone = "Cep";
+  static const video = "Görüntülü";
+  static const letter = "E-Posta";
+  static const editUser = "Kişiyi düzenle";
+  static const shareUser = "Kişiyi paylaş";
+  static const addFastCall = "Hızlı aramaya ekle";
+  static const addUserTitle = "Kişi ekle";
+  static const addOneMoreNumber = "Bir Numara Daha Ekle";
+  static const save = "Kaydet";
+  static const phoneNumber = "Telefon Numarası";
 }

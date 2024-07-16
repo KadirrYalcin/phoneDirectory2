@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:phonediretory2/shared/strings/sign_strings.dart';
+import 'package:phonediretory2/shared/strings/strings.dart';
 import 'package:phonediretory2/widgets/sign_widgets.dart/custom_divider.dart';
 import 'package:phonediretory2/widgets/sign_widgets.dart/custom_text_field.dart';
 import 'package:phonediretory2/product/view_register/vm_register.dart';
 import 'package:phonediretory2/shared/asset_paths/image_paths.dart';
 import 'package:phonediretory2/widgets/sign_widgets.dart/other_login_buttons.dart';
+import 'package:provider/provider.dart';
 import '../../shared/fonts/text_styles.dart';
-import '../../widgets/sign_widgets.dart/sign_button.dart';
+import '../../widgets/custom_blue_button.dart';
 import '../../widgets/sign_widgets.dart/title.dart';
 
 class ViewRegister extends StatelessWidget {
@@ -25,32 +26,39 @@ class ViewRegister extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Image.asset(ImagePaths.logoPath),
-                  SizedBox(
-                    height: MediaQuery.sizeOf(context).height * .7,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const customTitle(
-                          title: SignStrings.registerTitle,
-                        ),
-                        _Body(),
-                        SignButton(
-                          onTap: () =>
-                              VMRegister().registerButtonFunc(context: context),
-                          title: SignStrings.registerButtonTitle,
-                        ),
-                        CustomDivider(),
-                        OtherLogin()
-                      ],
-                    ),
-                  ),
+                  _Body(),
                   GoToLoginString()
                 ],
               ),
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _Body extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: MediaQuery.sizeOf(context).height * .7,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const customTitle(
+            title: Strings.registerTitle,
+          ),
+          _BodyTextFields(),
+          CustomBlueButton(
+            clickable: context.watch<VMRegister>().isClickalbe,
+            onTap: () => VMRegister().registerButtonFunc(context: context),
+            title: Strings.registerButtonTitle,
+          ),
+          CustomDivider(),
+          OtherLogin()
+        ],
       ),
     );
   }
@@ -63,12 +71,12 @@ class GoToLoginString extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         const Text(
-          SignStrings.ifYouHaveAccounts,
+          Strings.ifYouHaveAccounts,
           style: TextStyles.medium,
         ),
         GestureDetector(
           onTap: () => VMRegister().goToLogin(context: context),
-          child: Text(SignStrings.goToLogin,
+          child: Text(Strings.goToLogin,
               style: TextStyles.medium.copyWith(fontWeight: FontWeight.bold)),
         )
       ],
@@ -76,26 +84,26 @@ class GoToLoginString extends StatelessWidget {
   }
 }
 
-class _Body extends StatelessWidget {
+class _BodyTextFields extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         CustomTextField(
-            hintText: SignStrings.nameSurnameHintText,
-            controller: TextEditingController()),
+            hintText: Strings.nameSurnameHintText,
+            controller: VMRegister.nameTextEditingController),
         CustomTextField(
-            hintText: SignStrings.emailHintText,
-            controller: TextEditingController()),
+            hintText: Strings.emailHintText,
+            controller: VMRegister.emailTextEditingController),
         CustomTextField(
-          hintText: SignStrings.passwordHintText,
-          controller: TextEditingController(),
-          ishowable: true,
+          hintText: Strings.passwordHintText,
+          controller: VMRegister.passwordTextEditingController,
+          showable: true,
         ),
         CustomTextField(
-          hintText: SignStrings.passwordAgainHintText,
-          controller: TextEditingController(),
-          ishowable: true,
+          hintText: Strings.passwordAgainHintText,
+          controller: VMRegister.passwordAgainTextEditingController,
+          showable: true,
         ),
       ],
     );

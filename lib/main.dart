@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:phonediretory2/product/view_home/view_home.dart';
+import 'package:phonediretory2/product/view_login/view_login.dart';
 import 'package:phonediretory2/product/view_login/vm_login.dart';
-import 'package:phonediretory2/product/view_register/view_register.dart';
+import 'package:phonediretory2/product/view_register/vm_register.dart';
 import 'package:phonediretory2/shared/colors/uicolors.dart';
 import 'package:provider/provider.dart';
 
-import 'product/view_home/view_home.dart';
+import 'product/view_add_user/view_add_user.dart';
 
 void main() {
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => VMLogin()),
+        ChangeNotifierProvider(create: (_) => VMRegister()),
       ],
       child: const MyApp(),
     ),
@@ -25,8 +28,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(fontFamily: "Inter", hintColor: UIColors.hintColor),
+      theme: ThemeData(
+        fontFamily: "Inter",
+        hintColor: UIColors.hintColor,
+      ),
       home: const MyHomePage(),
     );
   }
@@ -37,6 +42,6 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ViewHome();
+    return ViewLogin();
   }
 }

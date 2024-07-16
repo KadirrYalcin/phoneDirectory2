@@ -1,11 +1,33 @@
 import 'package:azlistview/azlistview.dart';
 import 'package:flutter/material.dart';
+import 'package:phonediretory2/core/models/user_model.dart';
+
+import '../view_add_user/view_add_user.dart';
+import '../view_detail/view_detail.dart';
 
 class VMHome {
   VMHome() {
     names = list.map((e) => Name(name: e, tag: e[0])).toList();
   }
   List<Name> names = [];
+
+  void goToDetail(context, String user) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ViewDetail(
+            user: user,
+          ),
+        ));
+  }
+
+  void addUser(context) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ViewAddUser(),
+        ));
+  }
 }
 
 class Name extends ISuspensionBean {

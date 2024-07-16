@@ -1,36 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:azlistview/azlistview.dart';
+import 'package:flutter/widgets.dart';
 import 'package:phonediretory2/product/view_home/vm_home.dart';
+import 'package:phonediretory2/shared/asset_paths/icon_paths.dart';
 import 'package:phonediretory2/shared/asset_paths/image_paths.dart';
 import 'package:phonediretory2/shared/colors/uicolors.dart';
-import 'package:phonediretory2/shared/strings/home_strings.dart';
+import 'package:phonediretory2/shared/fonts/text_styles.dart';
+import 'package:phonediretory2/shared/strings/strings.dart';
 
-class ViewHome extends StatefulWidget {
+class ViewHome extends StatelessWidget {
   const ViewHome({super.key});
-
-  @override
-  State<ViewHome> createState() => _ViewHomeState();
-}
-
-class _ViewHomeState extends State<ViewHome> {
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: SingleChildScrollView(
         child: Column(
           children: [
-            Image.asset(ImagePaths.logoPath),
+            _TabBar(),
+            const SizedBox(height: 16),
             CustomSearchBar(),
-            SizedBox(
-                height: MediaQuery.sizeOf(context).height * .7,
-                child: _ListBody()),
+            const SizedBox(height: 20),
+            _BodyList(),
           ],
         ),
       ),
@@ -38,69 +30,143 @@ class _ViewHomeState extends State<ViewHome> {
   }
 }
 
-class CustomSearchBar extends StatelessWidget {
+class _TabBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton(
-        onPressed: () {
-          showSearch(context: context, delegate: customSearhDelegate());
-        },
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          mainAxisSize: MainAxisSize.max,
-          children: [Text(HomeStrings.searcBarHintText), Icon(Icons.search)],
-        ));
+    return Padding(
+      padding: const EdgeInsets.only(left: 20, right: 20, top: 10.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Image.asset(
+            ImagePaths.logoPath,
+            height: 32,
+          ),
+          GestureDetector(
+            onTap: () => VMHome().addUser(context),
+            child: const CircleAvatar(
+              radius: 16,
+              backgroundColor: UIColors.blue,
+              child: ImageIcon(
+                AssetImage(IconPaths.userPlusRounded),
+                color: UIColors.white,
+              ),
+            ),
+          )
+        ],
+      ),
+    );
   }
 }
 
-class CustomListTle extends StatelessWidget {
-  final String Title;
+final class CustomSearchBar extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: GestureDetector(
+          onTap: () {
+            showSearch(context: context, delegate: customSearhDelegate());
+          },
+          child: Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: UIColors.borderGrey, width: 2)),
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Text(
+                    Strings.searcBarHintText,
+                    style: TextStyles.large
+                        .copyWith(color: Colors.black.withOpacity(0.32)),
+                  ),
+                  const ImageIcon(AssetImage(IconPaths.magnifier))
+                ],
+              ),
+            ),
+          )),
+    );
+  }
+}
+
+final class CustomListTle extends StatelessWidget {
+  final String title;
   final String image;
 
-  const CustomListTle({super.key, required this.Title, this.image = ""});
+  const CustomListTle({super.key, required this.title, this.image = ""});
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(Title),
-      leading: CircleAvatar(
-        backgroundColor: Colors.amber,
-        radius: 20,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          height: 30,
+          child: GestureDetector(
+            onTap: () => VMHome().goToDetail(context, title),
+            child: Row(
+              children: [
+                const CircleAvatar(
+                  backgroundColor: Colors.amber,
+                ),
+                Text(title),
+              ],
+            ),
+          ),
+        ),
+        const Divider()
+      ],
+    );
+  }
+}
+
+final class _BodyList extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: MediaQuery.sizeOf(context).height * .7,
+      child: AzListView(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        indexBarOptions: const IndexBarOptions(
+          indexHintAlignment: Alignment.centerRight,
+        ),
+        indexHintBuilder: (context, tag) {
+          return Container(
+            height: 50,
+            width: 50,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16), color: UIColors.blue),
+            child: Center(
+                child: Text(
+              tag,
+              style: const TextStyle(color: Colors.white),
+            )),
+          );
+        },
+        data: VMHome().names,
+        itemCount: VMHome().names.length,
+        itemBuilder: (context, index) => CustomListTle(
+          title: VMHome().names[index].name,
+          image: "",
+        ),
       ),
     );
   }
 }
 
-class _ListBody extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return AzListView(
-      indexBarOptions: const IndexBarOptions(
-        selectTextStyle: TextStyle(color: Colors.amber),
-        indexHintAlignment: Alignment.centerRight,
-      ),
-      indexHintBuilder: (context, tag) {
-        return Container(
-          height: 50,
-          width: 50,
-          child: Center(child: Text(tag)),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16), color: Colors.amber),
-        );
-      },
-      data: VMHome().names,
-      itemCount: VMHome().names.length,
-      itemBuilder: (context, index) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [Text(VMHome().names[index].name), Divider()],
-      ),
-    );
-  }
-}
-
-class customSearhDelegate extends SearchDelegate {
+final class customSearhDelegate extends SearchDelegate {
   @override
   List<Widget>? buildActions(BuildContext context) {
-    return [IconButton(onPressed: () {}, icon: Icon(Icons.clear))];
+    return [
+      IconButton(
+          onPressed: () {
+            query = "";
+          },
+          icon: const Icon(Icons.clear))
+    ];
   }
 
   @override
@@ -122,11 +188,11 @@ class customSearhDelegate extends SearchDelegate {
       }
     }
     return ListView.builder(
-      itemCount: matchQuery.length,
-      itemBuilder: (context, index) => ListTile(
-        title: Text(matchQuery[index]),
-      ),
-    );
+        itemCount: matchQuery.length,
+        itemBuilder: (context, index) => CustomListTle(
+              title: matchQuery[index],
+              image: "",
+            ));
   }
 
   @override
@@ -142,8 +208,9 @@ class customSearhDelegate extends SearchDelegate {
         itemBuilder: (context, index) {
           var result = matchQuery[index];
 
-          return ListTile(
-            title: Text(result),
+          return CustomListTle(
+            title: result,
+            image: "",
           );
         });
   }
