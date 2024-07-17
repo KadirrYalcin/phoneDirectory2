@@ -14,11 +14,32 @@ class ViewHome extends StatelessWidget {
     return Scaffold(
       appBar: _Appbar(),
       body: SafeArea(
-        child: PageView.builder(
-          controller: VMHome.pageController,
-          onPageChanged: context.watch<VMHome>().onPageChanged,
-          itemCount: VMHome.pages.length,
-          itemBuilder: (context, index) => VMHome.pages[index],
+        child: Column(
+          children: [
+            Expanded(
+              child: PageView.builder(
+                controller: VMHome.pageController,
+                onPageChanged: context.watch<VMHome>().onPageChanged,
+                itemCount: VMHome.pages.length,
+                itemBuilder: (context, index) => VMHome.pages[index],
+              ),
+            ),
+            SizedBox(
+              height: 2,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: List.generate(5, (index) {
+                  return Expanded(
+                    child: Container(
+                      color: context.watch<VMHome>().selectedIndex == index
+                          ? UIColors.blue
+                          : UIColors.grey,
+                    ),
+                  );
+                }),
+              ),
+            )
+          ],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
