@@ -1,31 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:phonediretory2/product/view_add_user/vm_add_user.dart';
 import 'package:phonediretory2/shared/asset_paths/icon_paths.dart';
 import 'package:phonediretory2/widgets/custom_blue_button.dart';
 import 'package:phonediretory2/widgets/sign_widgets.dart/custom_text_field.dart';
-
-import '../../core/models/user_model.dart';
+import 'package:provider/provider.dart';
 import '../../shared/colors/uicolors.dart';
 import '../../shared/strings/strings.dart';
 
-class ViewAddUser extends StatefulWidget {
-  final User? user;
-  const ViewAddUser({super.key, this.user});
+class ViewAddUser extends StatelessWidget {
+  const ViewAddUser({
+    super.key,
+  });
 
   @override
-  State<ViewAddUser> createState() => _ViewAddUserState();
-}
-
-class _ViewAddUserState extends State<ViewAddUser> {
-  final VMAddUser _vmAddUser = VMAddUser();
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _vmAddUser.getUser(widget.user);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,7 +25,11 @@ class _ViewAddUserState extends State<ViewAddUser> {
               AddPhoto(),
               _Body(),
               const Spacer(),
-              CustomBlueButton(title: Strings.save, onTap: () {}),
+              CustomBlueButton(
+                title: Strings.save,
+                onTap: () {},
+                clickable: context.watch<VMAddUser>().isClickalbe,
+              ),
               const SizedBox(
                 height: 40,
               )
@@ -70,23 +61,23 @@ class _Body extends StatelessWidget {
   }
 }
 
-class AddNumber extends StatefulWidget {
+final class AddNumber extends StatefulWidget {
   @override
   State<AddNumber> createState() => _AddNumberState();
 }
 
 class _AddNumberState extends State<AddNumber> {
-  bool AddNumber = false;
+  bool addNumber = false;
   @override
   Widget build(BuildContext context) {
-    return AddNumber
+    return addNumber
         ? CustomTextField(
             hintText: Strings.phone,
             controller: VMAddUser.oneMorephoneNumberController)
         : GestureDetector(
             onTap: () {
               setState(() {
-                AddNumber = true;
+                addNumber = true;
               });
             },
             child: Padding(
@@ -103,10 +94,10 @@ class _AddNumberState extends State<AddNumber> {
                       size: 16,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 8,
                   ),
-                  Text(Strings.addOneMoreNumber),
+                  const Text(Strings.addOneMoreNumber),
                 ],
               ),
             ),
@@ -119,12 +110,30 @@ final class AddPhoto extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20.0),
-      child: CircleAvatar(
-        backgroundColor: UIColors.borderGrey,
-        radius: 36,
-        child: const ImageIcon(
-          AssetImage(IconPaths.addPhoto),
-          color: Colors.black,
+      child: GestureDetector(
+        onTap: () {
+          context.read<VMAddUser>().pickImage(context);
+        },
+        child: Container(
+          decoration: BoxDecoration(
+              color: UIColors.borderGrey.withOpacity(0.05),
+              border: Border.all(width: 2, color: UIColors.borderGrey),
+              shape: BoxShape.circle),
+          height: 72,
+          width: 72,
+          child: context.watch<VMAddUser>().image == null
+              ? const ImageIcon(
+                  AssetImage(IconPaths.addPhoto),
+                  color: Colors.black,
+                )
+              : ClipOval(
+                  child: Image.file(
+                    context.watch<VMAddUser>().image!,
+                    fit: BoxFit.cover,
+                    height: 72,
+                    width: 72,
+                  ),
+                ),
         ),
       ),
     );

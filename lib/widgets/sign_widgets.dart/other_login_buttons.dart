@@ -45,6 +45,9 @@ class LoginWithOtherButton extends StatelessWidget {
       height: MediaQuery.sizeOf(context).height * .07,
       child: OutlinedButton(
         style: OutlinedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
           side: BorderSide(
             color: UIColors.borderGrey,
           ),
@@ -58,7 +61,7 @@ class LoginWithOtherButton extends StatelessWidget {
               const SizedBox(width: 8),
               Text(
                 title,
-                style: TextStyles.medium,
+                style: TextStyles.medium.copyWith(fontWeight: FontWeight.w500),
               ),
             ],
           ),

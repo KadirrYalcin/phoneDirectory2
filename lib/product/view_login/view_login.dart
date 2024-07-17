@@ -47,7 +47,7 @@ class _Body extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const customTitle(
+          const CustomTitle(
             title: Strings.loginTitle,
           ),
           _EnterVariable(),

@@ -2,31 +2,40 @@ import 'package:azlistview/azlistview.dart';
 import 'package:flutter/material.dart';
 import 'package:phonediretory2/core/models/user_model.dart';
 
-import '../view_add_user/view_add_user.dart';
-import '../view_detail/view_detail.dart';
+import 'pages/list_page.dart';
 
-class VMHome {
+class VMHome extends ChangeNotifier {
   VMHome() {
     names = list.map((e) => Name(name: e, tag: e[0])).toList();
   }
   List<Name> names = [];
 
-  void goToDetail(context, String user) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ViewDetail(
-            user: user,
-          ),
-        ));
+  void goToDetail(context, User user) {
+    Navigator.pushNamed(context, '/userDetail', arguments: user);
   }
 
   void addUser(context) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ViewAddUser(),
-        ));
+    Navigator.pushNamed(context, '/addUser');
+  }
+
+  static final List pages = [
+    const Text("1.sayfa"),
+    const Text("2.sayfa"),
+    ListPage(),
+    const Text("4.sayfa"),
+    const Text("5.sayfa"),
+  ];
+  int selectedIndex = 2;
+  static final PageController pageController = PageController(initialPage: 2);
+  void onPageChanged(int index) {
+    selectedIndex = index;
+    notifyListeners();
+  }
+
+  void onItemTapped(int index) {
+    VMHome.pageController.jumpToPage(index);
+    selectedIndex = index;
+    notifyListeners();
   }
 }
 

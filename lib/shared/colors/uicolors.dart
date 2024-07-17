@@ -11,6 +11,7 @@ class UIColors {
       const Color(0xFF008000).withOpacity(0.08);
   static const Color white = Colors.white;
   static const Color black = Colors.black;
+  static Color grey = Colors.black.withOpacity(0.32);
   static const Color blue = Color(0xFF1C64EF);
   static Color lightBlue = const Color(0xFF1C64EF).withOpacity(0.64);
   static Color hintColor = Colors.black.withOpacity(0.32);

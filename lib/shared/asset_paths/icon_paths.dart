@@ -12,4 +12,9 @@ class IconPaths {
   static const videoCamera = "assets/icons/Videocamera.png";
   static const letter = "assets/icons/Letter.png";
   static const addPhoto = "assets/icons/AddPhoto.png";
+  static const fastCall = "assets/icons/fastCall.png";
+  static const lastCall = "assets/icons/lastCall.png";
+  static const user = "assets/icons/user.png";
+  static const keyboard = "assets/icons/keyboard.png";
+  static const voiceMessage = "assets/icons/voiceMessage.png";
 }

@@ -8,7 +8,7 @@ final class CustomBlueButton extends StatelessWidget {
   final VoidCallback onTap;
 
   final bool clickable;
-  CustomBlueButton(
+  const CustomBlueButton(
       {super.key,
       required this.title,
       required this.onTap,

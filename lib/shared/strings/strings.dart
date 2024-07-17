@@ -10,9 +10,9 @@ class Strings {
   static const loginWithGoogle = "Google ile giriş yap";
   static const loginWithFacebook = "Facebook ile giriş yap";
   static const ifYouDontHaveAccounts = "Eğer hesabınız yok ise ";
-  static const goToRegister = "Kayıt Ol ";
+  static const goToRegister = "Kayıt Ol";
   static const registerButtonTitle = "Kayıt Ol";
-  static const ifYouHaveAccounts = "Eğer hesabınız var ise home_strings";
+  static const ifYouHaveAccounts = "Eğer hesabınız var ise ";
   static const goToLogin = "Giriş yap";
   static const nameSurnameHintText = "Ad Soyad";
   static const passwordAgainHintText = "Şifre Tekrardan";
@@ -29,4 +29,10 @@ class Strings {
   static const addOneMoreNumber = "Bir Numara Daha Ekle";
   static const save = "Kaydet";
   static const phoneNumber = "Telefon Numarası";
+  static const galleryAccessDenied = "Galeri erişim izni reddedildi";
+  static const fastCall = "Hızlı Arama";
+  static const lastCall = "Son Arama";
+  static const user = "Kişiler";
+  static const keyboard = "Klavye";
+  static const voiceMessage = "Sesli Mesaj";
 }

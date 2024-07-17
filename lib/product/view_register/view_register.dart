@@ -20,7 +20,7 @@ class ViewRegister extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: SafeArea(
-            child: Container(
+            child: SizedBox(
               height: MediaQuery.sizeOf(context).height - 40,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -47,7 +47,7 @@ class _Body extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const customTitle(
+          const CustomTitle(
             title: Strings.registerTitle,
           ),
           _BodyTextFields(),

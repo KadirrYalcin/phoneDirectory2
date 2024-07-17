@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:phonediretory2/core/models/user_model.dart';
 import 'package:phonediretory2/product/view_detail/vm_detail.dart';
 import 'package:phonediretory2/shared/asset_paths/icon_paths.dart';
@@ -9,11 +8,17 @@ import 'package:phonediretory2/shared/strings/strings.dart';
 
 import '../../shared/asset_paths/image_paths.dart';
 
-class ViewDetail extends StatelessWidget {
-  const ViewDetail({super.key, required this.user});
-  final String user;
+class ViewUserDetail extends StatefulWidget {
+  const ViewUserDetail({super.key});
+
+  @override
+  State<ViewUserDetail> createState() => _ViewUserDetailState();
+}
+
+class _ViewUserDetailState extends State<ViewUserDetail> {
   @override
   Widget build(BuildContext context) {
+    final User user = ModalRoute.of(context)!.settings.arguments as User;
     return Scaffold(
         body: SafeArea(
       child: Padding(
@@ -21,9 +26,11 @@ class ViewDetail extends StatelessWidget {
         child: Column(
           children: [
             _TabBar(),
-            UserPhotoCard(tag: user),
+            UserPhotoCard(tag: user.name),
             ConnectionOptions(),
-            _Body(),
+            _Body(
+              user: user,
+            ),
           ],
         ),
       ),
@@ -32,6 +39,9 @@ class ViewDetail extends StatelessWidget {
 }
 
 final class _Body extends StatelessWidget {
+  final User user;
+
+  const _Body({required this.user});
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -40,7 +50,7 @@ final class _Body extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           _BodyButton(
-            onTap: () => VMDetail().editUser(context),
+            onTap: () => VMDetail().editUser(context, user),
             iconPath: IconPaths.pen,
             title: Strings.editUser,
           ),
@@ -63,8 +73,7 @@ final class _BodyButton extends StatelessWidget {
   final String title;
   final VoidCallback? onTap;
 
-  const _BodyButton(
-      {super.key, required this.iconPath, required this.title, this.onTap});
+  const _BodyButton({required this.iconPath, required this.title, this.onTap});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
