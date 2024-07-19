@@ -1,29 +1,15 @@
 import 'package:flutter/material.dart';
 
+import '../../shared/strings/strings.dart';
+import '../../widgets/toast_widget.dart';
+
 class VMLogin with ChangeNotifier {
   static final TextEditingController emailTextEditingController =
       TextEditingController();
   static final TextEditingController passwordTextEditingController =
       TextEditingController();
-  bool isClickalbe = false;
+  String? unClickableReason;
   bool rememberMe = false;
-  VMLogin() {
-    emailTextEditingController.addListener(() {
-      changeClickable();
-    });
-    passwordTextEditingController.addListener(() {
-      changeClickable();
-    });
-  }
-  void changeClickable() {
-    if (emailTextEditingController.text.isNotEmpty &&
-        passwordTextEditingController.text.isNotEmpty) {
-      isClickalbe = true;
-    } else {
-      isClickalbe = false;
-    }
-    notifyListeners();
-  }
 
   void showForgotPassword() {}
   void goToRegister({required BuildContext context}) {
@@ -31,7 +17,18 @@ class VMLogin with ChangeNotifier {
   }
 
   void loginButtonFunc({required BuildContext context}) {
-    Navigator.pushReplacementNamed(context, '/home');
+    if (emailTextEditingController.text.isEmpty ||
+        emailTextEditingController.text == "") {
+      unClickableReason = Strings.enterEmailMessage;
+    } else if (passwordTextEditingController.text.isEmpty ||
+        passwordTextEditingController.text == "") {
+      unClickableReason = Strings.enterPasswordMessage;
+    }
+    if (unClickableReason != null) {
+      showToastMessage(unClickableReason!);
+    } else {
+      Navigator.pushReplacementNamed(context, '/home');
+    }
   }
 
   void changeRemember() {

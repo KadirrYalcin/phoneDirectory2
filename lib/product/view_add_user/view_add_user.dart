@@ -28,7 +28,6 @@ class ViewAddUser extends StatelessWidget {
               CustomBlueButton(
                 title: Strings.save,
                 onTap: () {},
-                clickable: context.watch<VMAddUser>().isClickalbe,
               ),
               const SizedBox(
                 height: 40,

@@ -7,7 +7,7 @@ import '../../shared/strings/strings.dart';
 
 class VMAddUser extends ChangeNotifier {
   User? user;
-  bool isClickalbe = false;
+  String? unClickableReason;
   static TextEditingController nameSrnameController = TextEditingController();
   static TextEditingController phoneNumberController = TextEditingController();
   static TextEditingController oneMorephoneNumberController =
@@ -29,29 +29,6 @@ class VMAddUser extends ChangeNotifier {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text(Strings.galleryAccessDenied)),
       );
-    }
-    notifyListeners();
-  }
-
-  VMAddUser() {
-    nameSrnameController.addListener(() {
-      changeClickable();
-    });
-    phoneNumberController.addListener(() {
-      changeClickable();
-    });
-
-    emailController.addListener(() {
-      changeClickable();
-    });
-  }
-  void changeClickable() {
-    if (nameSrnameController.text.isNotEmpty &&
-        phoneNumberController.text.isNotEmpty &&
-        emailController.text.isNotEmpty) {
-      isClickalbe = true;
-    } else {
-      isClickalbe = false;
     }
     notifyListeners();
   }

@@ -5,10 +5,18 @@ import 'package:phonediretory2/core/models/user_model.dart';
 import 'pages/list_page.dart';
 
 class VMHome extends ChangeNotifier {
+  static final List pages = [
+    const Text("1.sayfa"),
+    const Text("2.sayfa"),
+    ListPage(),
+    const Text("4.sayfa"),
+    const Text("5.sayfa"),
+  ];
+  int selectedIndex = 2;
+  List<Name> names = [];
   VMHome() {
     names = list.map((e) => Name(name: e, tag: e[0])).toList();
   }
-  List<Name> names = [];
 
   void goToDetail(context, User user) {
     Navigator.pushNamed(context, '/userDetail', arguments: user);
@@ -18,14 +26,6 @@ class VMHome extends ChangeNotifier {
     Navigator.pushNamed(context, '/addUser');
   }
 
-  static final List pages = [
-    const Text("1.sayfa"),
-    const Text("2.sayfa"),
-    ListPage(),
-    const Text("4.sayfa"),
-    const Text("5.sayfa"),
-  ];
-  int selectedIndex = 2;
   static final PageController pageController = PageController(initialPage: 2);
   void onPageChanged(int index) {
     selectedIndex = index;

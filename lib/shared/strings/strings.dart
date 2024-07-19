@@ -35,4 +35,9 @@ class Strings {
   static const user = "Kişiler";
   static const keyboard = "Klavye";
   static const voiceMessage = "Sesli Mesaj";
+  static const enterNameSurnameMessage = "İsim ekleyiniz.";
+  static const enterEmailMessage = "E-mail ekleyiniz.";
+  static const enterPasswordMessage = "Şifrenizi giriniz.";
+  static const enterPasswordAgainMessage = "Şifrenizi tekrar giriniz.";
+  static const enterNumberMessage = "Telefon numarası giriniz.";
 }

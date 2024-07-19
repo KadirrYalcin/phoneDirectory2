@@ -15,63 +15,80 @@ class ViewHome extends StatelessWidget {
       appBar: _Appbar(),
       body: SafeArea(
         child: Column(
-          children: [
-            Expanded(
-              child: PageView.builder(
-                controller: VMHome.pageController,
-                onPageChanged: context.watch<VMHome>().onPageChanged,
-                itemCount: VMHome.pages.length,
-                itemBuilder: (context, index) => VMHome.pages[index],
-              ),
-            ),
-            SizedBox(
-              height: 2,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: List.generate(5, (index) {
-                  return Expanded(
-                    child: Container(
-                      color: context.watch<VMHome>().selectedIndex == index
-                          ? UIColors.blue
-                          : UIColors.grey,
-                    ),
-                  );
-                }),
-              ),
-            )
-          ],
+          children: [_PageBuilder(), _BotttomNavDivider()],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-          currentIndex: context.watch<VMHome>().selectedIndex,
-          selectedItemColor: UIColors.blue,
-          unselectedItemColor: UIColors.grey,
-          type: BottomNavigationBarType.fixed,
-          showSelectedLabels: true,
-          showUnselectedLabels: true,
-          onTap: VMHome().onItemTapped,
-          items: const [
-            BottomNavigationBarItem(
-                icon: ImageIcon(AssetImage(IconPaths.fastCall)),
-                label: Strings.fastCall),
-            BottomNavigationBarItem(
-                icon: ImageIcon(AssetImage(IconPaths.lastCall)),
-                label: Strings.lastCall),
-            BottomNavigationBarItem(
-                icon: ImageIcon(AssetImage(IconPaths.user)),
-                label: Strings.user),
-            BottomNavigationBarItem(
-                icon: ImageIcon(AssetImage(IconPaths.keyboard)),
-                label: Strings.keyboard),
-            BottomNavigationBarItem(
-                icon: ImageIcon(AssetImage(IconPaths.voiceMessage)),
-                label: Strings.voiceMessage)
-          ]),
+      bottomNavigationBar: _BottomNavBar(),
     );
   }
 }
 
-class _Appbar extends StatelessWidget implements PreferredSize {
+final class _BottomNavBar extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BottomNavigationBar(
+        currentIndex: context.watch<VMHome>().selectedIndex,
+        selectedItemColor: UIColors.blue,
+        unselectedItemColor: UIColors.grey,
+        type: BottomNavigationBarType.fixed,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
+        onTap: VMHome().onItemTapped,
+        items: const [
+          BottomNavigationBarItem(
+              icon: ImageIcon(AssetImage(IconPaths.fastCall)),
+              label: Strings.fastCall),
+          BottomNavigationBarItem(
+              icon: ImageIcon(AssetImage(IconPaths.lastCall)),
+              label: Strings.lastCall),
+          BottomNavigationBarItem(
+              icon: ImageIcon(AssetImage(IconPaths.user)), label: Strings.user),
+          BottomNavigationBarItem(
+              icon: ImageIcon(AssetImage(IconPaths.keyboard)),
+              label: Strings.keyboard),
+          BottomNavigationBarItem(
+              icon: ImageIcon(AssetImage(IconPaths.voiceMessage)),
+              label: Strings.voiceMessage)
+        ]);
+  }
+}
+
+final class _BotttomNavDivider extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 2,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: List.generate(5, (index) {
+          return Expanded(
+            child: Container(
+              color: context.watch<VMHome>().selectedIndex == index
+                  ? UIColors.blue
+                  : UIColors.borderGrey,
+            ),
+          );
+        }),
+      ),
+    );
+  }
+}
+
+final class _PageBuilder extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: PageView.builder(
+        controller: VMHome.pageController,
+        onPageChanged: context.watch<VMHome>().onPageChanged,
+        itemCount: VMHome.pages.length,
+        itemBuilder: (context, index) => VMHome.pages[index],
+      ),
+    );
+  }
+}
+
+final class _Appbar extends StatelessWidget implements PreferredSize {
   @override
   Widget build(BuildContext context) {
     return AppBar(

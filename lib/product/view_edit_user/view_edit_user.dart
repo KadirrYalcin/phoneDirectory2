@@ -119,7 +119,14 @@ final class AddPhoto extends StatelessWidget {
                   AssetImage(IconPaths.addPhoto),
                   color: Colors.black,
                 )
-              : Image.file(VMEditUser().image!),
+              : ClipOval(
+                  child: Image.file(
+                    context.watch<VMEditUser>().image!,
+                    fit: BoxFit.cover,
+                    height: 72,
+                    width: 72,
+                  ),
+                ),
         ),
       ),
     );

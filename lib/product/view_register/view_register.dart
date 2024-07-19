@@ -52,7 +52,6 @@ class _Body extends StatelessWidget {
           ),
           _BodyTextFields(),
           CustomBlueButton(
-            clickable: context.watch<VMRegister>().isClickalbe,
             onTap: () => VMRegister().registerButtonFunc(context: context),
             title: Strings.registerButtonTitle,
           ),

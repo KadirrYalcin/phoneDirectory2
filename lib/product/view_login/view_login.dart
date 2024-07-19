@@ -52,7 +52,6 @@ class _Body extends StatelessWidget {
           ),
           _EnterVariable(),
           CustomBlueButton(
-              clickable: context.watch<VMLogin>().isClickalbe,
               onTap: () => VMLogin().loginButtonFunc(context: context),
               title: Strings.loginButonTitle),
           CustomDivider(),

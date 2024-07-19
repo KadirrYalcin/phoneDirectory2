@@ -54,7 +54,8 @@ final class _Body extends StatelessWidget {
             iconPath: IconPaths.pen,
             title: Strings.editUser,
           ),
-          const _BodyButton(
+          _BodyButton(
+            onTap: () => VMDetail().shareUserData(user, context),
             iconPath: IconPaths.share,
             title: Strings.shareUser,
           ),

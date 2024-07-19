@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../shared/strings/strings.dart';
+import '../../widgets/toast_widget.dart';
+
 class VMRegister extends ChangeNotifier {
   static final TextEditingController nameTextEditingController =
       TextEditingController();
@@ -9,35 +12,27 @@ class VMRegister extends ChangeNotifier {
       TextEditingController();
   static final TextEditingController passwordAgainTextEditingController =
       TextEditingController();
-  bool isClickalbe = false;
-  VMRegister() {
-    nameTextEditingController.addListener(() {
-      changeClickable();
-    });
-    emailTextEditingController.addListener(() {
-      changeClickable();
-    });
-    passwordTextEditingController.addListener(() {
-      changeClickable();
-    });
-    passwordAgainTextEditingController.addListener(() {
-      changeClickable();
-    });
-  }
-  void changeClickable() {
-    if (nameTextEditingController.text.isNotEmpty &&
-        emailTextEditingController.text.isNotEmpty &&
-        passwordTextEditingController.text.isNotEmpty &&
-        passwordAgainTextEditingController.text.isNotEmpty) {
-      isClickalbe = true;
-    } else {
-      isClickalbe = false;
-    }
-    notifyListeners();
-  }
+  String? unClickableReason;
 
   void registerButtonFunc({required BuildContext context}) {
-    Navigator.pushReplacementNamed(context, '/home');
+    if (nameTextEditingController.text.isEmpty ||
+        nameTextEditingController.text == "") {
+      unClickableReason = Strings.enterNameSurnameMessage;
+    } else if (emailTextEditingController.text.isEmpty ||
+        emailTextEditingController.text == "") {
+      unClickableReason = Strings.enterEmailMessage;
+    } else if (passwordTextEditingController.text.isEmpty ||
+        passwordTextEditingController.text == "") {
+      unClickableReason = Strings.enterPasswordMessage;
+    } else if (passwordAgainTextEditingController.text.isEmpty ||
+        passwordAgainTextEditingController.text == "") {
+      unClickableReason = Strings.enterPasswordAgainMessage;
+    }
+    if (unClickableReason != null) {
+      showToastMessage(unClickableReason!);
+    } else {
+      Navigator.pushReplacementNamed(context, '/home');
+    }
   }
 
   void goToLogin({required BuildContext context}) {
