@@ -1,7 +1,6 @@
 import 'package:azlistview/azlistview.dart';
 import 'package:flutter/material.dart';
-
-import '../../../core/models/user_model.dart';
+import 'package:phonediretory2/core/models/person_model.dart';
 import '../../../shared/asset_paths/icon_paths.dart';
 import '../../../shared/colors/uicolors.dart';
 import '../../../shared/fonts/text_styles.dart';
@@ -59,10 +58,9 @@ final class CustomSearchBar extends StatelessWidget {
 }
 
 final class CustomListTle extends StatelessWidget {
-  final String title;
-  final String image;
+  final Person person;
 
-  const CustomListTle({super.key, required this.title, this.image = ""});
+  const CustomListTle({super.key, required this.person});
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -71,14 +69,13 @@ final class CustomListTle extends StatelessWidget {
         SizedBox(
           height: 30,
           child: GestureDetector(
-            onTap: () => VMHome().goToDetail(
-                context, User(name: title, tag: "tag", phone: "phone")),
+            onTap: () => VMHome().goToDetail(context, person),
             child: Row(
               children: [
                 const CircleAvatar(
                   backgroundColor: Colors.amber,
                 ),
-                Text(title),
+                Text(person.name),
               ],
             ),
           ),
@@ -93,11 +90,11 @@ final class _BodyList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: MediaQuery.sizeOf(context).height * .75,
+      height: MediaQuery.sizeOf(context).height * .72,
       child: AzListView(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         indexBarOptions: const IndexBarOptions(
-          indexHintAlignment: Alignment.centerRight,
+          indexHintAlignment: Alignment.centerLeft,
         ),
         indexHintBuilder: (context, tag) {
           return Container(
@@ -112,11 +109,10 @@ final class _BodyList extends StatelessWidget {
             )),
           );
         },
-        data: VMHome().names,
-        itemCount: VMHome().names.length,
+        data: VMHome().persons,
+        itemCount: VMHome().persons.length,
         itemBuilder: (context, index) => CustomListTle(
-          title: VMHome().names[index].name,
-          image: "",
+          person: VMHome().persons[index],
         ),
       ),
     );
@@ -147,26 +143,25 @@ final class CustomSearhDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    List<String> matchQuery = [];
-    for (var name in VMHome().names) {
+    List<Person> matchQuery = [];
+    for (var name in VMHome().persons) {
       if (name.name.toLowerCase().contains(query.toLowerCase())) {
-        matchQuery.add(name.name);
+        matchQuery.add(name);
       }
     }
     return ListView.builder(
         itemCount: matchQuery.length,
         itemBuilder: (context, index) => CustomListTle(
-              title: matchQuery[index],
-              image: "",
+              person: matchQuery[index],
             ));
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    List<String> matchQuery = [];
-    for (var name in VMHome().names) {
+    List<Person> matchQuery = [];
+    for (var name in VMHome().persons) {
       if (name.name.toLowerCase().contains(query.toLowerCase())) {
-        matchQuery.add(name.name);
+        matchQuery.add(name);
       }
     }
     return ListView.builder(
@@ -175,8 +170,7 @@ final class CustomSearhDelegate extends SearchDelegate {
           var result = matchQuery[index];
 
           return CustomListTle(
-            title: result,
-            image: "",
+            person: result,
           );
         });
   }

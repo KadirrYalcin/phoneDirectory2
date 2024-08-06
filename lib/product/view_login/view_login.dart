@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import '../../shared/strings/strings.dart';
 import '../../widgets/custom_blue_button.dart';
 import '../../widgets/sign_widgets.dart/custom_divider.dart';
-import '../../widgets/sign_widgets.dart/custom_text_field.dart';
+import '../../widgets/custom_text_field.dart';
 import '../../widgets/sign_widgets.dart/other_login_buttons.dart';
 import '../../widgets/sign_widgets.dart/title.dart';
 
@@ -90,6 +90,7 @@ class _EnterVariable extends StatelessWidget {
     return Column(
       children: [
         CustomTextField(
+            keyboardType: TextInputType.emailAddress,
             hintText: Strings.emailHintText,
             controller: VMLogin.emailTextEditingController),
         CustomTextField(

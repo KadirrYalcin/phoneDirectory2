@@ -33,7 +33,7 @@ final class _BottomNavBar extends StatelessWidget {
         type: BottomNavigationBarType.fixed,
         showSelectedLabels: true,
         showUnselectedLabels: true,
-        onTap: VMHome().onItemTapped,
+        onTap: context.read<VMHome>().onItemTapped,
         items: const [
           BottomNavigationBarItem(
               icon: ImageIcon(AssetImage(IconPaths.fastCall)),
@@ -42,7 +42,8 @@ final class _BottomNavBar extends StatelessWidget {
               icon: ImageIcon(AssetImage(IconPaths.lastCall)),
               label: Strings.lastCall),
           BottomNavigationBarItem(
-              icon: ImageIcon(AssetImage(IconPaths.user)), label: Strings.user),
+              icon: ImageIcon(AssetImage(IconPaths.person)),
+              label: Strings.person),
           BottomNavigationBarItem(
               icon: ImageIcon(AssetImage(IconPaths.keyboard)),
               label: Strings.keyboard),
@@ -98,12 +99,12 @@ final class _Appbar extends StatelessWidget implements PreferredSize {
       ),
       actions: [
         GestureDetector(
-          onTap: () => VMHome().addUser(context),
+          onTap: () => VMHome().addPerson(context),
           child: const CircleAvatar(
             radius: 16,
             backgroundColor: UIColors.blue,
             child: ImageIcon(
-              AssetImage(IconPaths.userPlusRounded),
+              AssetImage(IconPaths.personPlusRounded),
               color: UIColors.white,
             ),
           ),

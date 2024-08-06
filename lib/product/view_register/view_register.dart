@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:phonediretory2/shared/strings/strings.dart';
 import 'package:phonediretory2/widgets/sign_widgets.dart/custom_divider.dart';
-import 'package:phonediretory2/widgets/sign_widgets.dart/custom_text_field.dart';
+import 'package:phonediretory2/widgets/custom_text_field.dart';
 import 'package:phonediretory2/product/view_register/vm_register.dart';
 import 'package:phonediretory2/shared/asset_paths/image_paths.dart';
 import 'package:phonediretory2/widgets/sign_widgets.dart/other_login_buttons.dart';
-import 'package:provider/provider.dart';
 import '../../shared/fonts/text_styles.dart';
 import '../../widgets/custom_blue_button.dart';
 import '../../widgets/sign_widgets.dart/title.dart';
@@ -92,8 +91,10 @@ class _BodyTextFields extends StatelessWidget {
             hintText: Strings.nameSurnameHintText,
             controller: VMRegister.nameTextEditingController),
         CustomTextField(
-            hintText: Strings.emailHintText,
-            controller: VMRegister.emailTextEditingController),
+          hintText: Strings.emailHintText,
+          controller: VMRegister.emailTextEditingController,
+          keyboardType: TextInputType.emailAddress,
+        ),
         CustomTextField(
           hintText: Strings.passwordHintText,
           controller: VMRegister.passwordTextEditingController,

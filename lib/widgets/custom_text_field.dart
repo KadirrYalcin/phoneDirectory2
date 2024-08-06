@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:phonediretory2/shared/asset_paths/icon_paths.dart';
-import '../../shared/colors/uicolors.dart';
+import '../shared/colors/uicolors.dart';
 
 final class CustomTextField extends StatefulWidget {
   const CustomTextField(
       {super.key,
       required this.hintText,
       required this.controller,
+      this.keyboardType = TextInputType.text,
       this.showable = false});
   final String hintText;
   final TextEditingController controller;
+  final TextInputType keyboardType;
   final bool showable;
 
   @override
@@ -19,6 +21,7 @@ final class CustomTextField extends StatefulWidget {
 class _CustomTextFieldState extends State<CustomTextField> {
   bool isEmpty = true;
   bool isVisible = true;
+
   @override
   Widget build(BuildContext context) {
     MediaQuery.sizeOf(context);
@@ -30,6 +33,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: TextField(
+        keyboardType: widget.keyboardType,
         onChanged: (value) => setState(() {
           isEmpty = value.isEmpty;
         }),

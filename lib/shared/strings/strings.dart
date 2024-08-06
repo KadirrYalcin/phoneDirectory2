@@ -22,17 +22,17 @@ class Strings {
   static const phone = "Cep";
   static const video = "Görüntülü";
   static const letter = "E-Posta";
-  static const editUser = "Kişiyi düzenle";
-  static const shareUser = "Kişiyi paylaş";
+  static const editPerson = "Kişiyi düzenle";
+  static const sharePerson = "Kişiyi paylaş";
   static const addFastCall = "Hızlı aramaya ekle";
-  static const addUserTitle = "Kişi ekle";
+  static const addPersonTitle = "Kişi ekle";
   static const addOneMoreNumber = "Bir Numara Daha Ekle";
   static const save = "Kaydet";
   static const phoneNumber = "Telefon Numarası";
   static const galleryAccessDenied = "Galeri erişim izni reddedildi";
   static const fastCall = "Hızlı Arama";
   static const lastCall = "Son Arama";
-  static const user = "Kişiler";
+  static const person = "Kişiler";
   static const keyboard = "Klavye";
   static const voiceMessage = "Sesli Mesaj";
   static const enterNameSurnameMessage = "İsim ekleyiniz.";
@@ -40,4 +40,11 @@ class Strings {
   static const enterPasswordMessage = "Şifrenizi giriniz.";
   static const enterPasswordAgainMessage = "Şifrenizi tekrar giriniz.";
   static const enterNumberMessage = "Telefon numarası giriniz.";
+  static const wawning = "Uyarı";
+  static const nameAlreadyExistsMessage = "Bu isimde zaten bir kişi kayıtlı";
+  static const deletePerson = "Kişiyi sil";
+  static const deletePersonTitle =
+      'Kullanıcıyı gerçekten silmek istyor musunuz?';
+  static const deletePersonButtonTittle = 'Devam et';
+  static const dontDeletePersonButtonTittle = 'vazgeç';
 }

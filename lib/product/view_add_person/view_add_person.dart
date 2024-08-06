@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:phonediretory2/product/view_add_user/vm_add_user.dart';
+import 'package:phonediretory2/product/view_add_person/vm_add_person.dart';
 import 'package:phonediretory2/shared/asset_paths/icon_paths.dart';
 import 'package:phonediretory2/widgets/custom_blue_button.dart';
-import 'package:phonediretory2/widgets/sign_widgets.dart/custom_text_field.dart';
+import 'package:phonediretory2/widgets/custom_text_field.dart';
 import 'package:provider/provider.dart';
 import '../../shared/colors/uicolors.dart';
 import '../../shared/strings/strings.dart';
 
-class ViewAddUser extends StatelessWidget {
-  const ViewAddUser({
+class ViewAddPerson extends StatelessWidget {
+  const ViewAddPerson({
     super.key,
   });
 
@@ -27,7 +27,9 @@ class ViewAddUser extends StatelessWidget {
               const Spacer(),
               CustomBlueButton(
                 title: Strings.save,
-                onTap: () {},
+                onTap: () {
+                  VMAddPerson().savePerson(context);
+                },
               ),
               const SizedBox(
                 height: 40,
@@ -47,14 +49,18 @@ class _Body extends StatelessWidget {
       children: [
         CustomTextField(
             hintText: Strings.nameSurnameHintText,
-            controller: VMAddUser.nameSrnameController),
+            controller: VMAddPerson.nameSurnameController),
         CustomTextField(
-            hintText: Strings.phoneNumber,
-            controller: VMAddUser.phoneNumberController),
+          hintText: Strings.phoneNumber,
+          controller: VMAddPerson.phoneNumberController,
+          keyboardType: TextInputType.number,
+        ),
         AddNumber(),
         CustomTextField(
-            hintText: Strings.emailHintText,
-            controller: VMAddUser.emailController),
+          hintText: Strings.emailHintText,
+          controller: VMAddPerson.emailController,
+          keyboardType: TextInputType.emailAddress,
+        ),
       ],
     );
   }
@@ -72,7 +78,9 @@ class _AddNumberState extends State<AddNumber> {
     return addNumber
         ? CustomTextField(
             hintText: Strings.phone,
-            controller: VMAddUser.oneMorephoneNumberController)
+            controller: VMAddPerson.oneMorephoneNumberController,
+            keyboardType: TextInputType.number,
+          )
         : GestureDetector(
             onTap: () {
               setState(() {
@@ -111,7 +119,7 @@ final class AddPhoto extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 20.0),
       child: GestureDetector(
         onTap: () {
-          context.read<VMAddUser>().pickImage(context);
+          context.read<VMAddPerson>().pickImage(context);
         },
         child: Container(
           decoration: BoxDecoration(
@@ -120,14 +128,14 @@ final class AddPhoto extends StatelessWidget {
               shape: BoxShape.circle),
           height: 72,
           width: 72,
-          child: context.watch<VMAddUser>().image == null
+          child: context.watch<VMAddPerson>().image == null
               ? const ImageIcon(
                   AssetImage(IconPaths.addPhoto),
                   color: Colors.black,
                 )
               : ClipOval(
                   child: Image.file(
-                    context.watch<VMAddUser>().image!,
+                    context.watch<VMAddPerson>().image!,
                     fit: BoxFit.cover,
                     height: 72,
                     width: 72,
@@ -164,7 +172,7 @@ final class _TabBar extends StatelessWidget {
                           color: Colors.black.withOpacity(0.10))
                     ]),
                 child: const Icon(Icons.arrow_back_ios_new, size: 20))),
-        const Text(Strings.addUserTitle,
+        const Text(Strings.addPersonTitle,
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
         const SizedBox(
           width: 32,

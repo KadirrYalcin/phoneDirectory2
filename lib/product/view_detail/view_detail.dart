@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:phonediretory2/core/models/user_model.dart';
+import 'package:phonediretory2/core/models/person_model.dart';
 import 'package:phonediretory2/product/view_detail/vm_detail.dart';
 import 'package:phonediretory2/shared/asset_paths/icon_paths.dart';
 import 'package:phonediretory2/shared/colors/uicolors.dart';
@@ -8,17 +8,18 @@ import 'package:phonediretory2/shared/strings/strings.dart';
 
 import '../../shared/asset_paths/image_paths.dart';
 
-class ViewUserDetail extends StatefulWidget {
-  const ViewUserDetail({super.key});
+class ViewPersonDetail extends StatefulWidget {
+  const ViewPersonDetail({super.key});
 
   @override
-  State<ViewUserDetail> createState() => _ViewUserDetailState();
+  State<ViewPersonDetail> createState() => _ViewPersonDetailState();
 }
 
-class _ViewUserDetailState extends State<ViewUserDetail> {
+class _ViewPersonDetailState extends State<ViewPersonDetail> {
   @override
   Widget build(BuildContext context) {
-    final User user = ModalRoute.of(context)!.settings.arguments as User;
+    final Person person = ModalRoute.of(context)!.settings.arguments as Person;
+
     return Scaffold(
         body: SafeArea(
       child: Padding(
@@ -26,10 +27,12 @@ class _ViewUserDetailState extends State<ViewUserDetail> {
         child: Column(
           children: [
             _TabBar(),
-            UserPhotoCard(tag: user.name),
-            ConnectionOptions(),
+            PersonPhotoCard(person: person),
+            ConnectionOptions(
+              person: person,
+            ),
             _Body(
-              user: user,
+              person: person,
             ),
           ],
         ),
@@ -39,30 +42,35 @@ class _ViewUserDetailState extends State<ViewUserDetail> {
 }
 
 final class _Body extends StatelessWidget {
-  final User user;
+  final Person person;
 
-  const _Body({required this.user});
+  const _Body({required this.person});
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: MediaQuery.sizeOf(context).height * .27,
+      height: MediaQuery.sizeOf(context).height * .09 * 4,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           _BodyButton(
-            onTap: () => VMDetail().editUser(context, user),
+            onTap: () => VMDetail().editPerson(context, person),
             iconPath: IconPaths.pen,
-            title: Strings.editUser,
+            title: Strings.editPerson,
           ),
           _BodyButton(
-            onTap: () => VMDetail().shareUserData(user, context),
+            onTap: () => VMDetail().sharePersonData(person, context),
             iconPath: IconPaths.share,
-            title: Strings.shareUser,
+            title: Strings.sharePerson,
           ),
           const _BodyButton(
             iconPath: IconPaths.star,
             title: Strings.addFastCall,
-          )
+          ),
+          _BodyButton(
+            onTap: () => VMDetail().deletePerson(person, context),
+            iconPath: IconPaths.delete,
+            title: Strings.deletePerson,
+          ),
         ],
       ),
     );
@@ -88,7 +96,10 @@ final class _BodyButton extends StatelessWidget {
           child: Row(
             children: [
               ImageIcon(
-                AssetImage(iconPath),
+                AssetImage(
+                  iconPath,
+                ),
+                size: 22,
               ),
               const SizedBox(
                 width: 5,
@@ -101,6 +112,9 @@ final class _BodyButton extends StatelessWidget {
 }
 
 final class ConnectionOptions extends StatelessWidget {
+  final Person person;
+
+  const ConnectionOptions({super.key, required this.person});
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -113,7 +127,7 @@ final class ConnectionOptions extends StatelessWidget {
         ),
         ContactCard(
           imagePath: IconPaths.phoneCallingRounded,
-          onTap: () => VMDetail().connectWithPhone(),
+          onTap: () => VMDetail().connectWithPhone(person.number),
           title: Strings.phone,
         ),
         ContactCard(
@@ -167,10 +181,10 @@ final class ContactCard extends StatelessWidget {
   }
 }
 
-final class UserPhotoCard extends StatelessWidget {
-  final String tag;
+final class PersonPhotoCard extends StatelessWidget {
+  final Person person;
 
-  const UserPhotoCard({super.key, required this.tag});
+  const PersonPhotoCard({super.key, required this.person});
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -180,7 +194,7 @@ final class UserPhotoCard extends StatelessWidget {
           CircleAvatar(
             radius: 36,
             child: Image.asset(
-              ImagePaths.userPP,
+              ImagePaths.personPP,
               fit: BoxFit.cover,
               width: 72,
               height: 72,
@@ -190,11 +204,11 @@ final class UserPhotoCard extends StatelessWidget {
             height: 12,
           ),
           Text(
-            tag,
+            person.name,
             style: TextStyles.large,
           ),
           Text(
-            "+90 563 33 66",
+            person.number,
             style: TextStyles.small.copyWith(color: const Color(0xFF646464)),
           )
         ],

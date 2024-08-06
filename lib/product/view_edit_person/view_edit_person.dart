@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:phonediretory2/core/models/user_model.dart';
 import 'package:phonediretory2/shared/asset_paths/icon_paths.dart';
 import 'package:phonediretory2/widgets/custom_blue_button.dart';
-import 'package:phonediretory2/widgets/sign_widgets.dart/custom_text_field.dart';
+import 'package:phonediretory2/widgets/custom_text_field.dart';
 import 'package:provider/provider.dart';
-
+import '../../core/models/person_model.dart';
 import '../../shared/colors/uicolors.dart';
 import '../../shared/strings/strings.dart';
-import 'vm_edit_user.dart';
+import 'vm_edit_person.dart';
 
-class ViewEditUser extends StatelessWidget {
-  const ViewEditUser({super.key});
+class ViewEditPerson extends StatelessWidget {
+  const ViewEditPerson({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final User user = ModalRoute.of(context)!.settings.arguments as User;
-    VMEditUser().getUser(user);
+    final Person person = ModalRoute.of(context)!.settings.arguments as Person;
+
+    VMEditPerson.getPerson(person);
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -26,7 +26,11 @@ class ViewEditUser extends StatelessWidget {
               AddPhoto(),
               _Body(),
               const Spacer(),
-              CustomBlueButton(title: Strings.save, onTap: () {}),
+              CustomBlueButton(
+                  title: Strings.save,
+                  onTap: () {
+                    VMEditPerson().updatePerson(context);
+                  }),
               const SizedBox(
                 height: 40,
               )
@@ -45,14 +49,24 @@ class _Body extends StatelessWidget {
       children: [
         CustomTextField(
             hintText: Strings.nameSurnameHintText,
-            controller: VMEditUser.nameSrnameController),
+            controller: VMEditPerson.nameSurnameController),
         CustomTextField(
-            hintText: Strings.phoneNumber,
-            controller: VMEditUser.phoneNumberController),
-        AddNumber(),
+          hintText: Strings.phoneNumber,
+          controller: VMEditPerson.phoneNumberController,
+          keyboardType: TextInputType.number,
+        ),
+        VMEditPerson.person!.secondNumber == ""
+            ? AddNumber()
+            : CustomTextField(
+                hintText: Strings.phoneNumber,
+                controller: VMEditPerson.oneMorephoneNumberController,
+                keyboardType: TextInputType.number,
+              ),
         CustomTextField(
-            hintText: Strings.emailHintText,
-            controller: VMEditUser.emailController),
+          hintText: Strings.emailHintText,
+          controller: VMEditPerson.emailController,
+          keyboardType: TextInputType.emailAddress,
+        ),
       ],
     );
   }
@@ -70,7 +84,7 @@ class _AddNumberState extends State<AddNumber> {
     return addNumber
         ? CustomTextField(
             hintText: Strings.phone,
-            controller: VMEditUser.oneMorephoneNumberController)
+            controller: VMEditPerson.oneMorephoneNumberController)
         : GestureDetector(
             onTap: () {
               setState(() {
@@ -109,19 +123,19 @@ final class AddPhoto extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 20.0),
       child: GestureDetector(
         onTap: () {
-          context.read<VMEditUser>().pickImage(context);
+          context.read<VMEditPerson>().pickImage(context);
         },
         child: CircleAvatar(
           backgroundColor: UIColors.borderGrey,
           radius: 36,
-          child: context.watch<VMEditUser>().image == null
+          child: context.watch<VMEditPerson>().image == null
               ? const ImageIcon(
                   AssetImage(IconPaths.addPhoto),
                   color: Colors.black,
                 )
               : ClipOval(
                   child: Image.file(
-                    context.watch<VMEditUser>().image!,
+                    context.watch<VMEditPerson>().image!,
                     fit: BoxFit.cover,
                     height: 72,
                     width: 72,
@@ -158,7 +172,7 @@ final class _TabBar extends StatelessWidget {
                           color: Colors.black.withOpacity(0.10))
                     ]),
                 child: const Icon(Icons.arrow_back_ios_new, size: 20))),
-        const Text(Strings.editUser,
+        const Text(Strings.editPerson,
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
         const SizedBox(
           width: 32,

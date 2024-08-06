@@ -1,26 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:phonediretory2/product/view_add_user/view_add_user.dart';
-import 'package:phonediretory2/product/view_add_user/vm_add_user.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:phonediretory2/core/models/person_model.dart';
+import 'package:phonediretory2/product/view_add_person/view_add_person.dart';
+import 'package:phonediretory2/product/view_add_person/vm_add_person.dart';
 import 'package:phonediretory2/product/view_detail/view_detail.dart';
-import 'package:phonediretory2/product/view_edit_user/view_edit_user.dart';
-import 'package:phonediretory2/product/view_edit_user/vm_edit_user.dart';
+import 'package:phonediretory2/product/view_edit_person/view_edit_person.dart';
+import 'package:phonediretory2/product/view_edit_person/vm_edit_person.dart';
 import 'package:phonediretory2/product/view_home/view_home.dart';
+import 'package:phonediretory2/product/view_home/vm_home.dart';
 import 'package:phonediretory2/product/view_login/view_login.dart';
 import 'package:phonediretory2/product/view_login/vm_login.dart';
 import 'package:phonediretory2/product/view_register/view_register.dart';
 import 'package:phonediretory2/product/view_register/vm_register.dart';
 import 'package:phonediretory2/shared/colors/uicolors.dart';
 import 'package:provider/provider.dart';
-import 'product/view_home/vm_home.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+late Box personBox;
+late final SharedPreferences prefs;
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  prefs = await SharedPreferences.getInstance();
+  final appDocumentDir = await getApplicationDocumentsDirectory();
+  await Hive.initFlutter(appDocumentDir.path);
+  Hive.registerAdapter(PersonAdapter()); // Adapter kaydını burada yapıyoruz
+  personBox = await Hive.openBox<Person>('personBox');
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => VMLogin()),
         ChangeNotifierProvider(create: (_) => VMRegister()),
-        ChangeNotifierProvider(create: (_) => VMAddUser()),
-        ChangeNotifierProvider(create: (_) => VMEditUser()),
+        ChangeNotifierProvider(create: (_) => VMAddPerson()),
+        ChangeNotifierProvider(create: (_) => VMEditPerson()),
         ChangeNotifierProvider(create: (_) => VMHome()),
       ],
       child: const MyApp(),
@@ -31,7 +45,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -40,9 +53,9 @@ class MyApp extends StatelessWidget {
         '/': (context) => const ViewLogin(),
         '/register': (context) => const ViewRegister(),
         '/home': (context) => const ViewHome(),
-        '/editUser': (context) => const ViewEditUser(),
-        '/addUser': (context) => const ViewAddUser(),
-        '/userDetail': (context) => const ViewUserDetail(),
+        '/editUser': (context) => const ViewEditPerson(),
+        '/addUser': (context) => const ViewAddPerson(),
+        '/userDetail': (context) => const ViewPersonDetail(),
       },
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
