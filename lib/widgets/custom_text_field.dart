@@ -24,7 +24,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
   @override
   Widget build(BuildContext context) {
-    MediaQuery.sizeOf(context);
     var outlineInputBorder = OutlineInputBorder(
         borderSide: BorderSide(
           color: isEmpty ? UIColors.borderGrey : UIColors.borderGreen,

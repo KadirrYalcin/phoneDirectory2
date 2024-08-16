@@ -39,6 +39,7 @@ class Strings {
   static const enterEmailMessage = "E-mail ekleyiniz.";
   static const enterPasswordMessage = "Şifrenizi giriniz.";
   static const enterPasswordAgainMessage = "Şifrenizi tekrar giriniz.";
+  static const passwordsNotMatched = "Şifreler Uyuşmuyor.";
   static const enterNumberMessage = "Telefon numarası giriniz.";
   static const wawning = "Uyarı";
   static const nameAlreadyExistsMessage = "Bu isimde zaten bir kişi kayıtlı";
@@ -47,4 +48,6 @@ class Strings {
       'Kullanıcıyı gerçekten silmek istyor musunuz?';
   static const deletePersonButtonTittle = 'Devam et';
   static const dontDeletePersonButtonTittle = 'vazgeç';
+  static const invalidUser = "Kullanıcı adı veya şifre hatalı";
+  static const unExpectedError = "Beklenmedik bir hata ile karşılaşıldı.";
 }

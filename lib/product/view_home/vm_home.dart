@@ -29,14 +29,15 @@ class VMHome extends ChangeNotifier {
   }
 
   void goToDetail(context, Person person) {
-    Navigator.pushNamed(context, '/userDetail', arguments: person);
+    Navigator.pushNamed(context, '/personDetail', arguments: person);
   }
 
   void addPerson(context) {
-    Navigator.pushNamed(context, '/addUser');
+    Navigator.pushNamed(context, '/addPerson');
   }
 
   static final PageController pageController = PageController(initialPage: 2);
+
   void onPageChanged(int index) {
     selectedIndex = index;
     notifyListeners();

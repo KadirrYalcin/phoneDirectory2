@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:phonediretory2/core/models/request_model.dart/user_register_model/user_register_model.dart';
+import 'package:phonediretory2/core/service/auth_service_functions.dart';
 
 import '../../shared/strings/strings.dart';
 import '../../widgets/toast_widget.dart';
@@ -14,7 +16,7 @@ class VMRegister extends ChangeNotifier {
       TextEditingController();
   String? unClickableReason;
 
-  void registerButtonFunc({required BuildContext context}) {
+  void registerButtonFunc({required BuildContext context}) async {
     if (nameTextEditingController.text.isEmpty ||
         nameTextEditingController.text == "") {
       unClickableReason = Strings.enterNameSurnameMessage;
@@ -27,11 +29,19 @@ class VMRegister extends ChangeNotifier {
     } else if (passwordAgainTextEditingController.text.isEmpty ||
         passwordAgainTextEditingController.text == "") {
       unClickableReason = Strings.enterPasswordAgainMessage;
+    } else if (passwordTextEditingController.text ==
+        passwordAgainTextEditingController.text) {
+      unClickableReason = Strings.passwordsNotMatched;
     }
     if (unClickableReason != null) {
       showToastMessage(unClickableReason!);
     } else {
-      Navigator.pushReplacementNamed(context, '/home');
+      UserRegisterModel userRegisterModel = UserRegisterModel(
+          fullName: nameTextEditingController.text,
+          email: emailTextEditingController.text,
+          password: passwordTextEditingController.text);
+      await AuthFunctions.tryRegister(
+          context: context, userRegisterModel: userRegisterModel);
     }
   }
 

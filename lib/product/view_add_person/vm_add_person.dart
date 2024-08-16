@@ -57,7 +57,7 @@ class VMAddPerson extends ChangeNotifier {
       oneMorephoneNumberController.text = "";
       emailController.text = "";
       personBox.put(person.id, person);
-      Navigator.pushReplacementNamed(context, "/home");
+      Navigator.pop(context);
     }
   }
 }
