@@ -10,6 +10,7 @@ import 'package:phonediretory2/product/view_edit_person/vm_edit_person.dart';
 import 'package:phonediretory2/product/view_home/view_home.dart';
 import 'package:phonediretory2/product/view_home/vm_home.dart';
 import 'package:phonediretory2/product/view_login/view_login.dart';
+import 'package:phonediretory2/product/view_login/vm_login.dart';
 import 'package:phonediretory2/product/view_register/view_register.dart';
 import 'package:phonediretory2/product/view_register/vm_register.dart';
 import 'package:phonediretory2/shared/colors/uicolors.dart';
@@ -32,6 +33,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => VMLogin()),
         ChangeNotifierProvider(create: (_) => VMRegister()),
         ChangeNotifierProvider(create: (_) => VMAddPerson()),
         ChangeNotifierProvider(create: (_) => VMEditPerson()),

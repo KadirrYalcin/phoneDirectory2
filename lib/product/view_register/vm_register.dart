@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:phonediretory2/core/models/request_model.dart/user_register_model/user_register_model.dart';
-import 'package:phonediretory2/core/service/auth_service_functions.dart';
+import 'package:phonediretory2/core/service/functions/auth_service_functions.dart';
 
 import '../../shared/strings/strings.dart';
 import '../../widgets/toast_widget.dart';

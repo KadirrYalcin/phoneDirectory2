@@ -1,9 +1,13 @@
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:phonediretory2/core/models/person_model.dart';
+import 'package:phonediretory2/core/models/request_model.dart/person_request_model/create_person_request_model.dart';
+import 'package:phonediretory2/core/models/response_model.dart/person_response_model.dart';
+import 'package:phonediretory2/core/service/functions/person_service_functions.dart';
 import 'package:phonediretory2/main.dart';
+import 'package:phonediretory2/product/view_home/vm_home.dart';
 import '../../shared/strings/strings.dart';
 import '../../widgets/toast_widget.dart';
 
@@ -34,7 +38,7 @@ class VMAddPerson extends ChangeNotifier {
     notifyListeners();
   }
 
-  void savePerson(BuildContext context) {
+  void savePerson(BuildContext context) async {
     if (nameSurnameController.text.isEmpty ||
         nameSurnameController.text == "") {
       unClickableReason = Strings.enterNameSurnameMessage;
@@ -45,19 +49,28 @@ class VMAddPerson extends ChangeNotifier {
     if (unClickableReason != null) {
       showToastMessage(unClickableReason!);
     } else {
-      prefs.setInt("totalPerson", ((prefs.getInt('totalPerson') ?? 0) + 1));
-      Person person = Person(
-          id: prefs.getInt("totalPerson")!,
-          name: VMAddPerson.nameSurnameController.text,
-          number: VMAddPerson.phoneNumberController.text,
-          secondNumber: VMAddPerson.oneMorephoneNumberController.text,
-          email: VMAddPerson.emailController.text);
-      nameSurnameController.text = "";
-      phoneNumberController.text = "";
-      oneMorephoneNumberController.text = "";
-      emailController.text = "";
-      personBox.put(person.id, person);
-      Navigator.pop(context);
+      CreatePersonRequestModel createPersonRequestModel =
+          CreatePersonRequestModel(
+        fullName: nameSurnameController.text,
+        emailDetail: emailController.text,
+        phoneNumber: [
+          phoneNumberController.text,
+        ],
+        photoUrl:
+            image == null ? null : await MultipartFile.fromFile(image!.path),
+      );
+      try {
+        PersonResponseModel personResponseModel =
+            await PersonServiceFunctions().addPerson(createPersonRequestModel);
+        Navigator.pop(context);
+        nameSurnameController.text = "";
+        phoneNumberController.text = "";
+        oneMorephoneNumberController.text = "";
+        emailController.text = "";
+        image = null;
+      } catch (e) {
+        showToastMessage("message");
+      }
     }
   }
 }

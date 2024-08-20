@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:phonediretory2/core/models/person_model.dart';
-import 'package:phonediretory2/main.dart';
+import 'package:phonediretory2/core/models/response_model.dart/person_response_model.dart';
+import 'package:phonediretory2/core/service/functions/person_service_functions.dart';
 import 'pages/list_page.dart';
 
 class VMHome extends ChangeNotifier {
@@ -12,23 +13,21 @@ class VMHome extends ChangeNotifier {
     const Text("5.sayfa"),
   ];
   int selectedIndex = 2;
+  late List<PersonResponseModel> personList = [];
   List<Person> persons = [];
   VMHome() {
-    for (int index = 0; index < personBox.length; index++) {
-      persons.add(personBox.getAt(index));
-    }
-    persons.sort((a, b) => a.compareTo(b));
+    updatelist();
   }
-  updatelist() {
-    persons.clear();
-    for (int index = 0; index < personBox.length; index++) {
-      persons.add(personBox.getAt(index));
+  updatelist() async {
+    personList = await PersonServiceFunctions().getAll();
+    if (personList.length > 2) {
+      personList.sort((a, b) => a.compareTo(b));
     }
-    persons.sort((a, b) => a.compareTo(b));
+
     notifyListeners();
   }
 
-  void goToDetail(context, Person person) {
+  void goToDetail(context, PersonResponseModel person) {
     Navigator.pushNamed(context, '/personDetail', arguments: person);
   }
 

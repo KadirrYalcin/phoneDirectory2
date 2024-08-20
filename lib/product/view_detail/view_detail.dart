@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:phonediretory2/core/models/person_model.dart';
+import 'package:phonediretory2/core/models/response_model.dart/person_response_model.dart';
+import 'package:phonediretory2/core/service/client/rest_client.dart';
 import 'package:phonediretory2/product/view_detail/vm_detail.dart';
 import 'package:phonediretory2/shared/asset_paths/icon_paths.dart';
 import 'package:phonediretory2/shared/colors/uicolors.dart';
@@ -18,7 +20,8 @@ class ViewPersonDetail extends StatefulWidget {
 class _ViewPersonDetailState extends State<ViewPersonDetail> {
   @override
   Widget build(BuildContext context) {
-    final Person person = ModalRoute.of(context)!.settings.arguments as Person;
+    final PersonResponseModel person =
+        ModalRoute.of(context)!.settings.arguments as PersonResponseModel;
 
     return Scaffold(
         body: SafeArea(
@@ -42,7 +45,7 @@ class _ViewPersonDetailState extends State<ViewPersonDetail> {
 }
 
 final class _Body extends StatelessWidget {
-  final Person person;
+  final PersonResponseModel person;
 
   const _Body({required this.person});
   @override
@@ -112,7 +115,7 @@ final class _BodyButton extends StatelessWidget {
 }
 
 final class ConnectionOptions extends StatelessWidget {
-  final Person person;
+  final PersonResponseModel person;
 
   const ConnectionOptions({super.key, required this.person});
   @override
@@ -127,7 +130,7 @@ final class ConnectionOptions extends StatelessWidget {
         ),
         ContactCard(
           imagePath: IconPaths.phoneCallingRounded,
-          onTap: () => VMDetail().connectWithPhone(person.number),
+          onTap: () => VMDetail().connectWithPhone(person.phoneNumber![0]!),
           title: Strings.phone,
         ),
         ContactCard(
@@ -182,7 +185,7 @@ final class ContactCard extends StatelessWidget {
 }
 
 final class PersonPhotoCard extends StatelessWidget {
-  final Person person;
+  final PersonResponseModel person;
 
   const PersonPhotoCard({super.key, required this.person});
   @override
@@ -193,22 +196,26 @@ final class PersonPhotoCard extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 36,
-            child: Image.asset(
-              ImagePaths.personPP,
-              fit: BoxFit.cover,
-              width: 72,
-              height: 72,
-            ),
+            child: person.photoUrl == null
+                ? null
+                : ClipOval(
+                    child: Image.network(
+                      servicePhotoUrl + person.photoUrl!,
+                      fit: BoxFit.cover,
+                      width: 72,
+                      height: 72,
+                    ),
+                  ),
           ),
           const SizedBox(
             height: 12,
           ),
           Text(
-            person.name,
+            person.fullName!,
             style: TextStyles.large,
           ),
           Text(
-            person.number,
+            person.phoneNumber![0]!,
             style: TextStyles.small.copyWith(color: const Color(0xFF646464)),
           )
         ],

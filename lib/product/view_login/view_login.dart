@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:phonediretory2/core/service/auth_service_functions.dart';
+import 'package:phonediretory2/main.dart';
 import 'package:phonediretory2/product/view_login/vm_login.dart';
 import 'package:phonediretory2/shared/asset_paths/image_paths.dart';
 import 'package:phonediretory2/shared/colors/uicolors.dart';
 import 'package:phonediretory2/shared/fonts/text_styles.dart';
+import 'package:phonediretory2/shared/strings/shared_prefs_keys.dart';
+import 'package:provider/provider.dart';
 import '../../shared/strings/strings.dart';
 import '../../widgets/custom_blue_button.dart';
 import '../../widgets/sign_widgets.dart/custom_divider.dart';
@@ -11,34 +13,16 @@ import '../../widgets/custom_text_field.dart';
 import '../../widgets/sign_widgets.dart/other_login_buttons.dart';
 import '../../widgets/sign_widgets.dart/title.dart';
 
-class ViewLogin extends StatefulWidget {
+class ViewLogin extends StatelessWidget {
   const ViewLogin({super.key});
 
   @override
-  State<ViewLogin> createState() => _ViewLoginState();
-}
-
-bool loginin = false;
-
-class _ViewLoginState extends State<ViewLogin> {
-  void navigateBasedOnLoginStatus(BuildContext context) async {
-    loginin = await AuthFunctions.tryRemember(context: context);
-
-    if (loginin) {
-      Navigator.pushReplacementNamed(context, '/home');
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    navigateBasedOnLoginStatus(context);
-  }
-
-  @override
   Widget build(BuildContext context) {
+    VMLogin().navigateBasedOnLoginStatus(context);
     return Scaffold(
-      body: !loginin
+      body: !context.watch<VMLogin>().isTimeOut &&
+              !context.watch<VMLogin>().loginin &&
+              prefs.getString(PrefsKeys.userEmail) != ""
           ? const Center(
               child: CircularProgressIndicator(
               color: UIColors.blue,

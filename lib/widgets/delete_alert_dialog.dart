@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:phonediretory2/core/models/response_model.dart/person_response_model.dart';
+import 'package:phonediretory2/core/service/functions/person_service_functions.dart';
+import 'package:phonediretory2/widgets/toast_widget.dart';
 
 import '../core/models/person_model.dart';
 import '../main.dart';
@@ -7,7 +10,7 @@ import '../shared/fonts/text_styles.dart';
 import '../shared/strings/strings.dart';
 
 class DeleteAlertDialog extends StatelessWidget {
-  final Person person;
+  final PersonResponseModel person;
   const DeleteAlertDialog({super.key, required this.person});
 
   @override
@@ -22,7 +25,7 @@ class DeleteAlertDialog extends StatelessWidget {
       actions: <Widget>[
         TextButton(
           onPressed: () {
-            Navigator.of(context).pop(); // Close the dialog
+            Navigator.of(context).pop();
           },
           child: Text(
             Strings.dontDeletePersonButtonTittle,
@@ -30,10 +33,14 @@ class DeleteAlertDialog extends StatelessWidget {
           ),
         ),
         TextButton(
-          onPressed: () {
-            personBox.delete(person.id);
-            Navigator.pushReplacementNamed(
-                context, "/home"); // Close the dialog
+          onPressed: () async {
+            try {
+              await PersonServiceFunctions().deletePerson(person.id!);
+
+              Navigator.pushReplacementNamed(context, "/home");
+            } catch (e) {
+              showToastMessage("Kişi silme bşarısıız");
+            }
           },
           child: Text(Strings.deletePersonButtonTittle,
               style: TextStyles.small.copyWith(color: UIColors.borderRed)),

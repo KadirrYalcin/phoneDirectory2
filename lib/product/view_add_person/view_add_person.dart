@@ -28,7 +28,7 @@ class ViewAddPerson extends StatelessWidget {
               CustomBlueButton(
                 title: Strings.save,
                 onTap: () {
-                  VMAddPerson().savePerson(context);
+                  context.read<VMAddPerson>().savePerson(context);
                 },
               ),
               const SizedBox(

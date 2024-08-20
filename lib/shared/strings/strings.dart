@@ -50,4 +50,6 @@ class Strings {
   static const dontDeletePersonButtonTittle = 'vazgeç';
   static const invalidUser = "Kullanıcı adı veya şifre hatalı";
   static const unExpectedError = "Beklenmedik bir hata ile karşılaşıldı.";
+  static const loginFailedError =
+      "Oturum açma başarısız Lütfen tekrar giriş yapınız.";
 }

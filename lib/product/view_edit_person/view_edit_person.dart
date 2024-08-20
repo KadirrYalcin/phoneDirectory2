@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phonediretory2/core/models/response_model.dart/person_response_model.dart';
 import 'package:phonediretory2/shared/asset_paths/icon_paths.dart';
 import 'package:phonediretory2/widgets/custom_blue_button.dart';
 import 'package:phonediretory2/widgets/custom_text_field.dart';
@@ -13,7 +14,8 @@ class ViewEditPerson extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Person person = ModalRoute.of(context)!.settings.arguments as Person;
+    final PersonResponseModel person =
+        ModalRoute.of(context)!.settings.arguments as PersonResponseModel;
 
     VMEditPerson.getPerson(person);
     return Scaffold(
@@ -55,7 +57,7 @@ class _Body extends StatelessWidget {
           controller: VMEditPerson.phoneNumberController,
           keyboardType: TextInputType.number,
         ),
-        VMEditPerson.person!.secondNumber == ""
+        VMEditPerson.person!.phoneNumber![1] == ""
             ? AddNumber()
             : CustomTextField(
                 hintText: Strings.phoneNumber,
