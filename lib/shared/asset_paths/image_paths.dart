@@ -1,5 +1,6 @@
 class ImagePaths {
   static const logoPath = "assets/images/logo.png";
+  static const personPP = "assets/images/UserPP.png";
   static const selectedBoxPath = "assets/icons/selected.png";
   static const unSelectedBoxPath = "assets/icons/unselected.png";
   static const googlePath = "assets/images/googleimage.png";

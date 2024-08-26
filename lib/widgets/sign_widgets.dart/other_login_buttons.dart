@@ -4,7 +4,7 @@ import 'package:phonediretory2/shared/colors/uicolors.dart';
 
 import '../../shared/asset_paths/image_paths.dart';
 import '../../shared/fonts/text_styles.dart';
-import '../../shared/strings/sign_strings.dart';
+import '../../shared/strings/strings.dart';
 
 final class OtherLogin extends StatelessWidget {
   @override
@@ -14,7 +14,7 @@ final class OtherLogin extends StatelessWidget {
         LoginWithOtherButton(
           imagePath: ImagePaths.googlePath,
           onTap: () => SignFunc.loginWithGoogle(),
-          title: SignStrings.loginWithGoogle,
+          title: Strings.loginWithGoogle,
         ),
         const SizedBox(
           height: 12,
@@ -22,7 +22,7 @@ final class OtherLogin extends StatelessWidget {
         LoginWithOtherButton(
           imagePath: ImagePaths.facebookPath,
           onTap: () => SignFunc.loginWithFacebook(),
-          title: SignStrings.loginWithFacebook,
+          title: Strings.loginWithFacebook,
         ),
       ],
     );
@@ -45,8 +45,11 @@ class LoginWithOtherButton extends StatelessWidget {
       height: MediaQuery.sizeOf(context).height * .07,
       child: OutlinedButton(
         style: OutlinedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
           side: BorderSide(
-            color: UIColors.lightGrey,
+            color: UIColors.borderGrey,
           ),
         ),
         onPressed: () => onTap(),
@@ -58,7 +61,7 @@ class LoginWithOtherButton extends StatelessWidget {
               const SizedBox(width: 8),
               Text(
                 title,
-                style: TextStyles.medium,
+                style: TextStyles.medium.copyWith(fontWeight: FontWeight.w500),
               ),
             ],
           ),

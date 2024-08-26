@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phonediretory2/shared/strings/strings.dart';
 
 import '../../shared/colors/uicolors.dart';
 import '../../shared/fonts/text_styles.dart';
@@ -11,19 +12,19 @@ final class CustomDivider extends StatelessWidget {
         Expanded(
           child: Container(
             height: 1,
-            color: UIColors.lightGrey,
+            color: UIColors.borderGrey,
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
+        const Padding(
+          padding: EdgeInsets.all(8.0),
           child: Text(
-            "Veya",
+            Strings.or,
             style: TextStyles.medium,
           ),
         ),
         Expanded(
           child: Container(
-            color: UIColors.lightGrey,
+            color: UIColors.borderGrey,
             height: 1,
           ),
         ),

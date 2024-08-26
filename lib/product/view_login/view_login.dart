@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:phonediretory2/main.dart';
 import 'package:phonediretory2/product/view_login/vm_login.dart';
 import 'package:phonediretory2/shared/asset_paths/image_paths.dart';
+import 'package:phonediretory2/shared/colors/uicolors.dart';
 import 'package:phonediretory2/shared/fonts/text_styles.dart';
-import 'package:phonediretory2/widgets/sign_widgets.dart/sign_button.dart';
+import 'package:phonediretory2/shared/strings/shared_prefs_keys.dart';
 import 'package:provider/provider.dart';
-import '../../shared/strings/sign_strings.dart';
+import '../../shared/strings/strings.dart';
+import '../../widgets/custom_blue_button.dart';
 import '../../widgets/sign_widgets.dart/custom_divider.dart';
-import '../../widgets/sign_widgets.dart/custom_text_field.dart';
+import '../../widgets/custom_text_field.dart';
 import '../../widgets/sign_widgets.dart/other_login_buttons.dart';
 import '../../widgets/sign_widgets.dart/title.dart';
 
@@ -15,42 +18,58 @@ class ViewLogin extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    VMLogin().navigateBasedOnLoginStatus(context);
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: SingleChildScrollView(
-            child: SizedBox(
-              height: MediaQuery.sizeOf(context).height - 40,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Image.asset(ImagePaths.logoPath),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * .7,
+      body: !context.watch<VMLogin>().isTimeOut &&
+              !context.watch<VMLogin>().loginin &&
+              prefs.getString(PrefsKeys.userEmail) != ""
+          ? const Center(
+              child: CircularProgressIndicator(
+              color: UIColors.blue,
+            ))
+          : Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: SingleChildScrollView(
+                child: SizedBox(
+                  height: MediaQuery.sizeOf(context).height,
+                  child: SafeArea(
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const customTitle(
-                          title: SignStrings.loginTitle,
-                        ),
+                        Image.asset(ImagePaths.logoPath),
                         _Body(),
-                        SignButton(
-                            onTap: () =>
-                                VMLogin().loginButtonFunc(context: context),
-                            title: SignStrings.loginButonTitle),
-                        CustomDivider(),
-                        OtherLogin(),
+                        GoToRegisterString(),
                       ],
                     ),
                   ),
-                  GoToRegisterString(),
-                ],
+                ),
               ),
             ),
+    );
+  }
+}
+
+class _Body extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * .7,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const CustomTitle(
+            title: Strings.loginTitle,
           ),
-        ),
+          _EnterVariable(),
+          CustomBlueButton(
+              onTap: () => VMLogin.loginButtonFunc(
+                    context: context,
+                  ),
+              title: Strings.loginButonTitle),
+          CustomDivider(),
+          OtherLogin(),
+        ],
       ),
     );
   }
@@ -63,13 +82,13 @@ final class GoToRegisterString extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         const Text(
-          SignStrings.ifYouDontHaveAccounts,
+          Strings.ifYouDontHaveAccounts,
           style: TextStyles.medium,
         ),
         GestureDetector(
-          onTap: () => VMLogin().goToRegister(context: context),
+          onTap: () => VMLogin.loginButtonFunc(context: context),
           child: Text(
-            SignStrings.goToRegister,
+            Strings.goToRegister,
             style: TextStyles.medium.copyWith(fontWeight: FontWeight.bold),
           ),
         ),
@@ -78,17 +97,18 @@ final class GoToRegisterString extends StatelessWidget {
   }
 }
 
-class _Body extends StatelessWidget {
+class _EnterVariable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         CustomTextField(
-            hintText: SignStrings.emailHintText,
+            keyboardType: TextInputType.emailAddress,
+            hintText: Strings.emailHintText,
             controller: VMLogin.emailTextEditingController),
         CustomTextField(
-            ishowable: true,
-            hintText: SignStrings.passwordHintText,
+            showable: true,
+            hintText: Strings.passwordHintText,
             controller: VMLogin.passwordTextEditingController),
         RememberAndForgotPassword(),
       ],
@@ -109,21 +129,30 @@ final class RememberAndForgotPassword extends StatelessWidget {
   }
 }
 
-final class RememberCheckBox extends StatelessWidget {
+final class RememberCheckBox extends StatefulWidget {
+  @override
+  State<RememberCheckBox> createState() => _RememberCheckBoxState();
+}
+
+class _RememberCheckBoxState extends State<RememberCheckBox> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.read<VMLogin>().changeRemember(),
+      onTap: () {
+        setState(() {
+          VMLogin.rememberMe = !VMLogin.rememberMe;
+        });
+      },
       child: Row(
         children: [
-          context.watch<VMLogin>().rememberMe
+          VMLogin.rememberMe
               ? const ImageIcon(AssetImage(ImagePaths.selectedBoxPath))
               : const ImageIcon(AssetImage(ImagePaths.unSelectedBoxPath)),
           const SizedBox(
             width: 5,
           ),
           Text(
-            SignStrings.checkboxTitle,
+            Strings.checkboxTitle,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(),
           ),
         ],
@@ -138,7 +167,7 @@ final class ForgotPassword extends StatelessWidget {
     return TextButton(
         onPressed: () => VMLogin().showForgotPassword(),
         child: const Text(
-          SignStrings.forgotPassword,
+          Strings.forgotPassword,
           style: TextStyles.small,
         ));
   }

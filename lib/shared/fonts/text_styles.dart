@@ -16,3 +16,4 @@ class TextStyles {
   static const TextStyle buttonBoldLarge = TextStyle(
       fontWeight: FontWeight.w600, fontSize: 24, color: UIColors.white);
 }
+

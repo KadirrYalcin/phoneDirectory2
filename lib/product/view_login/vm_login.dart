@@ -1,27 +1,69 @@
 import 'package:flutter/material.dart';
+import 'package:phonediretory2/core/models/request_model.dart/user_login_model/user_login_model.dart';
+import 'package:phonediretory2/main.dart';
+import 'package:phonediretory2/shared/strings/shared_prefs_keys.dart';
+import '../../core/service/functions/auth_service_functions.dart';
+import '../../shared/strings/strings.dart';
+import '../../widgets/toast_widget.dart';
 
-import '../view_home/view_home.dart';
-import '../view_register/view_register.dart';
-
-class VMLogin with ChangeNotifier {
+class VMLogin extends ChangeNotifier {
   static final TextEditingController emailTextEditingController =
       TextEditingController();
   static final TextEditingController passwordTextEditingController =
       TextEditingController();
-  bool rememberMe = false;
+  static String? unClickableReason;
+  static bool rememberMe = false;
+
+  bool loginin = false;
+  bool isTimeOut = false;
   void showForgotPassword() {}
   void goToRegister({required BuildContext context}) {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (BuildContext context) => ViewRegister()));
+    Navigator.pushReplacementNamed(context, '/register');
   }
 
-  void loginButtonFunc({required BuildContext context}) {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (BuildContext context) => ViewHome()));
-  }
+  void navigateBasedOnLoginStatus(BuildContext context) async {
+    loginin = await AuthFunctions.tryRemember(context: context).timeout(
+      const Duration(seconds: 2),
+      onTimeout: () {
+        isTimeOut = true;
+        return false;
+      },
+    );
 
-  void changeRemember() {
-    rememberMe = !rememberMe;
+    if (loginin) {
+      // ignore: use_build_context_synchronously
+      Navigator.pushReplacementNamed(context, '/home');
+    } else if (isTimeOut) {
+      prefs.setString(PrefsKeys.userPassword, "");
+      prefs.setString(PrefsKeys.userEmail, "");
+      prefs.setString(PrefsKeys.userToken, "");
+      notifyListeners();
+    }
     notifyListeners();
+  }
+
+  static void loginButtonFunc({
+    required BuildContext context,
+  }) async {
+    if (emailTextEditingController.text.isEmpty ||
+        emailTextEditingController.text == "") {
+      unClickableReason = Strings.enterEmailMessage;
+    } else if (passwordTextEditingController.text.isEmpty ||
+        passwordTextEditingController.text == "") {
+      unClickableReason = Strings.enterPasswordMessage;
+    } else {
+      unClickableReason = null;
+    }
+    if (unClickableReason != null) {
+      showToastMessage(unClickableReason!);
+    } else {
+      UserLoginModel loginModel = UserLoginModel(
+          email: emailTextEditingController.text,
+          password: passwordTextEditingController.text);
+      await AuthFunctions.tryLogin(
+          context: context,
+          userLoginModel: loginModel,
+          rememberClicked: rememberMe);
+    }
   }
 }

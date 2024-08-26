@@ -1,150 +1,125 @@
 import 'package:flutter/material.dart';
-import 'package:azlistview/azlistview.dart';
 import 'package:phonediretory2/product/view_home/vm_home.dart';
+import 'package:phonediretory2/shared/asset_paths/icon_paths.dart';
 import 'package:phonediretory2/shared/asset_paths/image_paths.dart';
 import 'package:phonediretory2/shared/colors/uicolors.dart';
-import 'package:phonediretory2/shared/strings/home_strings.dart';
+import 'package:phonediretory2/shared/strings/strings.dart';
+import 'package:provider/provider.dart';
 
-class ViewHome extends StatefulWidget {
+class ViewHome extends StatelessWidget {
   const ViewHome({super.key});
 
   @override
-  State<ViewHome> createState() => _ViewHomeState();
-}
-
-class _ViewHomeState extends State<ViewHome> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    context.read<VMHome>().updatelist();
     return Scaffold(
-        body: SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      appBar: _Appbar(),
+      body: SafeArea(
         child: Column(
-          children: [
-            Image.asset(ImagePaths.logoPath),
-            CustomSearchBar(),
-            SizedBox(
-                height: MediaQuery.sizeOf(context).height * .7,
-                child: _ListBody()),
-          ],
+          children: [_PageBuilder(), _BotttomNavDivider()],
         ),
       ),
-    ));
+      bottomNavigationBar: _BottomNavBar(),
+    );
   }
 }
 
-class CustomSearchBar extends StatelessWidget {
+final class _BottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton(
-        onPressed: () {
-          showSearch(context: context, delegate: customSearhDelegate());
-        },
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          mainAxisSize: MainAxisSize.max,
-          children: [Text(HomeStrings.searcBarHintText), Icon(Icons.search)],
-        ));
+    return BottomNavigationBar(
+        currentIndex: context.watch<VMHome>().selectedIndex,
+        selectedItemColor: UIColors.blue,
+        unselectedItemColor: UIColors.grey,
+        type: BottomNavigationBarType.fixed,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
+        onTap: context.read<VMHome>().onItemTapped,
+        items: const [
+          BottomNavigationBarItem(
+              icon: ImageIcon(AssetImage(IconPaths.fastCall)),
+              label: Strings.fastCall),
+          BottomNavigationBarItem(
+              icon: ImageIcon(AssetImage(IconPaths.lastCall)),
+              label: Strings.lastCall),
+          BottomNavigationBarItem(
+              icon: ImageIcon(AssetImage(IconPaths.person)),
+              label: Strings.person),
+          BottomNavigationBarItem(
+              icon: ImageIcon(AssetImage(IconPaths.keyboard)),
+              label: Strings.keyboard),
+          BottomNavigationBarItem(
+              icon: ImageIcon(AssetImage(IconPaths.voiceMessage)),
+              label: Strings.voiceMessage)
+        ]);
   }
 }
 
-class CustomListTle extends StatelessWidget {
-  final String Title;
-  final String image;
-
-  const CustomListTle({super.key, required this.Title, this.image = ""});
+final class _BotttomNavDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(Title),
-      leading: CircleAvatar(
-        backgroundColor: Colors.amber,
-        radius: 20,
-      ),
-    );
-  }
-}
-
-class _ListBody extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return AzListView(
-      indexBarOptions: const IndexBarOptions(
-        selectTextStyle: TextStyle(color: Colors.amber),
-        indexHintAlignment: Alignment.centerRight,
-      ),
-      indexHintBuilder: (context, tag) {
-        return Container(
-          height: 50,
-          width: 50,
-          child: Center(child: Text(tag)),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16), color: Colors.amber),
-        );
-      },
-      data: VMHome().names,
-      itemCount: VMHome().names.length,
-      itemBuilder: (context, index) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [Text(VMHome().names[index].name), Divider()],
-      ),
-    );
-  }
-}
-
-class customSearhDelegate extends SearchDelegate {
-  @override
-  List<Widget>? buildActions(BuildContext context) {
-    return [IconButton(onPressed: () {}, icon: Icon(Icons.clear))];
-  }
-
-  @override
-  Widget? buildLeading(BuildContext context) {
-    return IconButton(
-      icon: Icon(Icons.arrow_back),
-      onPressed: () {
-        close(context, null);
-      },
-    );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    List<String> matchQuery = [];
-    for (var name in VMHome().names) {
-      if (name.name.toLowerCase().contains(query.toLowerCase())) {
-        matchQuery.add(name.name);
-      }
-    }
-    return ListView.builder(
-      itemCount: matchQuery.length,
-      itemBuilder: (context, index) => ListTile(
-        title: Text(matchQuery[index]),
-      ),
-    );
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    List<String> matchQuery = [];
-    for (var name in VMHome().names) {
-      if (name.name.toLowerCase().contains(query.toLowerCase())) {
-        matchQuery.add(name.name);
-      }
-    }
-    return ListView.builder(
-        itemCount: matchQuery.length,
-        itemBuilder: (context, index) {
-          var result = matchQuery[index];
-
-          return ListTile(
-            title: Text(result),
+    return SizedBox(
+      height: 2,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: List.generate(5, (index) {
+          return Expanded(
+            child: Container(
+              color: context.watch<VMHome>().selectedIndex == index
+                  ? UIColors.blue
+                  : UIColors.borderGrey,
+            ),
           );
-        });
+        }),
+      ),
+    );
   }
+}
+
+final class _PageBuilder extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: PageView.builder(
+        controller: VMHome.pageController,
+        onPageChanged: context.watch<VMHome>().onPageChanged,
+        itemCount: VMHome.pages.length,
+        itemBuilder: (context, index) => VMHome.pages[index],
+      ),
+    );
+  }
+}
+
+final class _Appbar extends StatelessWidget implements PreferredSize {
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      title: Image.asset(
+        ImagePaths.logoPath,
+        height: 32,
+      ),
+      actions: [
+        GestureDetector(
+          onTap: () => VMHome().addPerson(context),
+          child: const CircleAvatar(
+            radius: 16,
+            backgroundColor: UIColors.blue,
+            child: ImageIcon(
+              AssetImage(IconPaths.personPlusRounded),
+              color: UIColors.white,
+            ),
+          ),
+        ),
+        const SizedBox(
+          width: 20,
+        )
+      ],
+    );
+  }
+
+  @override
+  Widget get child => throw UnimplementedError();
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
