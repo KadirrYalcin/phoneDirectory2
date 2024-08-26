@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:phonediretory2/core/models/request_model.dart/person_request_model/create_person_request_model.dart';
+import 'package:phonediretory2/core/models/request_model.dart/person_request_model/update_person_request_model.dart';
 import 'package:phonediretory2/core/models/response_model.dart/person_response_model.dart';
 import 'package:phonediretory2/core/service/client/rest_client.dart';
 import 'package:phonediretory2/main.dart';
@@ -30,9 +31,17 @@ class PersonServiceFunctions {
     return person;
   }
 
-  Future<PersonResponseModel> deletePerson(int PersonId) async {
+  Future<PersonResponseModel> deletePerson(int personId) async {
     PersonResponseModel personResponseModel =
-        await service.deletePerson(token, PersonId.toString());
+        await service.deletePerson(token, personId.toString());
+
+    return personResponseModel;
+  }
+
+  Future<PersonResponseModel> updatePerson(
+      int personId, UpdatePersonRequestModel updatePersonRequestModel) async {
+    PersonResponseModel personResponseModel = await service.updatePerson(
+        token, personId.toString(), updatePersonRequestModel);
 
     return personResponseModel;
   }

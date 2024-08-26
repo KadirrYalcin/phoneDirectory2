@@ -4,10 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:phonediretory2/core/models/request_model.dart/person_request_model/create_person_request_model.dart';
-import 'package:phonediretory2/core/models/response_model.dart/person_response_model.dart';
 import 'package:phonediretory2/core/service/functions/person_service_functions.dart';
-import 'package:phonediretory2/main.dart';
-import 'package:phonediretory2/product/view_home/vm_home.dart';
 import '../../shared/strings/strings.dart';
 import '../../widgets/toast_widget.dart';
 
@@ -60,8 +57,8 @@ class VMAddPerson extends ChangeNotifier {
             image == null ? null : await MultipartFile.fromFile(image!.path),
       );
       try {
-        PersonResponseModel personResponseModel =
-            await PersonServiceFunctions().addPerson(createPersonRequestModel);
+        await PersonServiceFunctions().addPerson(createPersonRequestModel);
+        // ignore: use_build_context_synchronously
         Navigator.pop(context);
         nameSurnameController.text = "";
         phoneNumberController.text = "";

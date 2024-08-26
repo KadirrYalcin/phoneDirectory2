@@ -9,9 +9,9 @@ import 'package:retrofit/error_logger.dart';
 import 'package:retrofit/http.dart';
 part 'rest_client.g.dart';
 
-const String servicePhotoUrl = 'https://192.168.12.105/uploads/';
+const String servicePhotoUrl = 'https://192.168.12.118/uploads/';
 
-@RestApi(baseUrl: 'https://192.168.12.105/')
+@RestApi(baseUrl: 'https://192.168.12.118/')
 abstract class RestClient {
   factory RestClient(Dio dio, {String baseUrl}) = _RestClient;
 //Auth

@@ -14,7 +14,7 @@ class _RestClient implements RestClient {
     this.baseUrl,
     this.errorLogger,
   }) {
-    baseUrl ??= 'https://192.168.12.105/';
+    baseUrl ??= 'https://192.168.12.118/';
   }
 
   final Dio _dio;
@@ -210,9 +210,10 @@ class _RestClient implements RestClient {
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Authorization': token};
     _headers.removeWhere((k, v) => v == null);
-    final _data = <String, dynamic>{};
-    _data.addAll(updatePersonRequestModel.toJson());
+    final _data = await updatePersonRequestModel.toFormData();
+
     final _options = _setStreamType<PersonResponseModel>(Options(
+      contentType: 'multipart/form-data',
       method: 'PUT',
       headers: _headers,
       extra: _extra,

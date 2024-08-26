@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:phonediretory2/core/models/response_model.dart/person_response_model.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../core/models/person_model.dart';
 import '../../widgets/delete_alert_dialog.dart';
 
 class VMDetail {

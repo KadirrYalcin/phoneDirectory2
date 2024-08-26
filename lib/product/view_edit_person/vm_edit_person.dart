@@ -1,28 +1,30 @@
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:phonediretory2/core/models/request_model.dart/person_request_model/update_person_request_model.dart';
 import 'package:phonediretory2/core/models/response_model.dart/person_response_model.dart';
-import 'package:phonediretory2/main.dart';
+import 'package:phonediretory2/core/service/functions/person_service_functions.dart';
 import 'package:phonediretory2/shared/strings/strings.dart';
 import 'package:phonediretory2/widgets/toast_widget.dart';
-import '../../core/models/person_model.dart';
+import 'package:provider/provider.dart';
 
 class VMEditPerson extends ChangeNotifier {
-  static PersonResponseModel? person;
-  static TextEditingController nameSurnameController = TextEditingController();
-  static TextEditingController phoneNumberController = TextEditingController();
-  static TextEditingController oneMorephoneNumberController =
-      TextEditingController();
-  static TextEditingController emailController = TextEditingController();
-  static getPerson(PersonResponseModel? person) {
-    if (person != null) {
-      person = person;
-      nameSurnameController.text = person.fullName!;
-      phoneNumberController.text = person.phoneNumber![0]!;
-      oneMorephoneNumberController.text = person.phoneNumber![1] ?? "";
-      emailController.text = person.emailDetail ?? "";
-    }
+  late PersonResponseModel person;
+  TextEditingController nameSurnameController = TextEditingController();
+  TextEditingController phoneNumberController = TextEditingController();
+  TextEditingController oneMorephoneNumberController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  String? unClickableReason;
+  getPerson(PersonResponseModel responsePerson) {
+    person = responsePerson;
+    nameSurnameController.text = responsePerson.fullName!;
+    phoneNumberController.text = responsePerson.phoneNumber![0]!;
+    oneMorephoneNumberController.text = responsePerson.phoneNumber!.length > 1
+        ? responsePerson.phoneNumber![1]!
+        : "";
+    emailController.text = responsePerson.emailDetail ?? "";
   }
 
   File? image;
@@ -52,27 +54,45 @@ class VMEditPerson extends ChangeNotifier {
     );
   }
 
-  void updatePerson(BuildContext context) {
-    List<String> getNames = [];
-    for (int i = 0; i < personBox.length; i++) {
-      getNames.add(personBox.getAt(i).name);
+  void updatePerson(BuildContext context) async {
+    if (nameSurnameController.text.isEmpty ||
+        nameSurnameController.text == "") {
+      unClickableReason = Strings.enterNameSurnameMessage;
+    } else if (phoneNumberController.text.isEmpty ||
+        phoneNumberController.text == "") {
+      unClickableReason = Strings.enterNumberMessage;
     }
-    if (person!.fullName != nameSurnameController.text &&
-        getNames.contains(nameSurnameController.text)) {
-      showToastMessage(Strings.nameAlreadyExistsMessage);
+    if (unClickableReason != null) {
+      showToastMessage(unClickableReason!);
     } else {
-      personBox.delete(person!.id);
-
-      personBox.put(
-        person!.id,
-        Person(
-            id: person!.id!,
-            name: nameSurnameController.text,
-            number: phoneNumberController.text,
-            email: emailController.text,
-            secondNumber: oneMorephoneNumberController.text),
-      );
-      Navigator.pushReplacementNamed(context, "/home");
+      UpdatePersonRequestModel updatePersonRequestModel =
+          oneMorephoneNumberController.text == ""
+              ? UpdatePersonRequestModel(
+                  fullName: nameSurnameController.text,
+                  phoneNumber: [
+                    phoneNumberController.text,
+                  ],
+                  emailDetail: emailController.text,
+                  photoUrl: image == null
+                      ? null
+                      : await MultipartFile.fromFile(image!.path),
+                )
+              : UpdatePersonRequestModel(
+                  fullName: nameSurnameController.text,
+                  phoneNumber: [
+                    phoneNumberController.text,
+                    oneMorephoneNumberController.text
+                  ],
+                  emailDetail: emailController.text,
+                  // ignore: use_build_context_synchronously
+                  photoUrl: image == null
+                      ? null
+                      : await MultipartFile.fromFile(image!.path),
+                );
+      await PersonServiceFunctions()
+          .updatePerson(person.id!, updatePersonRequestModel);
+      // ignore: use_build_context_synchronously
+      Navigator.popAndPushNamed(context, "/home");
     }
   }
 }

@@ -3,8 +3,8 @@ import 'package:phonediretory2/core/models/response_model.dart/person_response_m
 import 'package:phonediretory2/shared/asset_paths/icon_paths.dart';
 import 'package:phonediretory2/widgets/custom_blue_button.dart';
 import 'package:phonediretory2/widgets/custom_text_field.dart';
+import 'package:phonediretory2/widgets/person_photo_circle.dart';
 import 'package:provider/provider.dart';
-import '../../core/models/person_model.dart';
 import '../../shared/colors/uicolors.dart';
 import '../../shared/strings/strings.dart';
 import 'vm_edit_person.dart';
@@ -16,8 +16,8 @@ class ViewEditPerson extends StatelessWidget {
   Widget build(BuildContext context) {
     final PersonResponseModel person =
         ModalRoute.of(context)!.settings.arguments as PersonResponseModel;
-
-    VMEditPerson.getPerson(person);
+    VMEditPerson vmEditPerson = VMEditPerson();
+    vmEditPerson.getPerson(person);
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -25,13 +25,13 @@ class ViewEditPerson extends StatelessWidget {
           child: Column(
             children: [
               _TabBar(),
-              AddPhoto(),
-              _Body(),
+              AddPhoto(vmEditPerson),
+              _Body(vmEditPerson),
               const Spacer(),
               CustomBlueButton(
                   title: Strings.save,
                   onTap: () {
-                    VMEditPerson().updatePerson(context);
+                    vmEditPerson.updatePerson(context);
                   }),
               const SizedBox(
                 height: 40,
@@ -45,28 +45,32 @@ class ViewEditPerson extends StatelessWidget {
 }
 
 class _Body extends StatelessWidget {
+  final VMEditPerson vmEditPerson;
+  const _Body(this.vmEditPerson);
   @override
-  Widget build(BuildContext context) {
+  Widget build(
+    BuildContext context,
+  ) {
     return Column(
       children: [
         CustomTextField(
             hintText: Strings.nameSurnameHintText,
-            controller: VMEditPerson.nameSurnameController),
+            controller: vmEditPerson.nameSurnameController),
         CustomTextField(
           hintText: Strings.phoneNumber,
-          controller: VMEditPerson.phoneNumberController,
+          controller: vmEditPerson.phoneNumberController,
           keyboardType: TextInputType.number,
         ),
-        VMEditPerson.person!.phoneNumber![1] == ""
-            ? AddNumber()
+        vmEditPerson.person.phoneNumber!.length < 2
+            ? AddNumber(vmEditPerson)
             : CustomTextField(
                 hintText: Strings.phoneNumber,
-                controller: VMEditPerson.oneMorephoneNumberController,
+                controller: vmEditPerson.oneMorephoneNumberController,
                 keyboardType: TextInputType.number,
               ),
         CustomTextField(
           hintText: Strings.emailHintText,
-          controller: VMEditPerson.emailController,
+          controller: vmEditPerson.emailController,
           keyboardType: TextInputType.emailAddress,
         ),
       ],
@@ -75,6 +79,8 @@ class _Body extends StatelessWidget {
 }
 
 class AddNumber extends StatefulWidget {
+  final VMEditPerson vmEditPerson;
+  const AddNumber(this.vmEditPerson, {super.key});
   @override
   State<AddNumber> createState() => _AddNumberState();
 }
@@ -86,7 +92,7 @@ class _AddNumberState extends State<AddNumber> {
     return addNumber
         ? CustomTextField(
             hintText: Strings.phone,
-            controller: VMEditPerson.oneMorephoneNumberController)
+            controller: widget.vmEditPerson.oneMorephoneNumberController)
         : GestureDetector(
             onTap: () {
               setState(() {
@@ -118,32 +124,48 @@ class _AddNumberState extends State<AddNumber> {
   }
 }
 
-final class AddPhoto extends StatelessWidget {
+final class AddPhoto extends StatefulWidget {
+  final VMEditPerson vmEditPerson;
+  const AddPhoto(this.vmEditPerson, {super.key});
+
+  @override
+  State<AddPhoto> createState() => _AddPhotoState();
+}
+
+class _AddPhotoState extends State<AddPhoto> {
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20.0),
       child: GestureDetector(
         onTap: () {
-          context.read<VMEditPerson>().pickImage(context);
+          widget.vmEditPerson.pickImage(context).then(
+            (value) {
+              setState(() {});
+            },
+          );
         },
         child: CircleAvatar(
-          backgroundColor: UIColors.borderGrey,
-          radius: 36,
-          child: context.watch<VMEditPerson>().image == null
-              ? const ImageIcon(
-                  AssetImage(IconPaths.addPhoto),
-                  color: Colors.black,
-                )
-              : ClipOval(
-                  child: Image.file(
-                    context.watch<VMEditPerson>().image!,
-                    fit: BoxFit.cover,
-                    height: 72,
-                    width: 72,
-                  ),
-                ),
-        ),
+            backgroundColor: UIColors.borderGrey,
+            radius: 36,
+            child: widget.vmEditPerson.person.photoUrl == null
+                ? const ImageIcon(
+                    AssetImage(IconPaths.addPhoto),
+                    color: Colors.black,
+                  )
+                : widget.vmEditPerson.image == null
+                    ? PersonPhotoCircle(
+                        photoUrl: widget.vmEditPerson.person.photoUrl!,
+                        radius: 72,
+                      )
+                    : ClipOval(
+                        child: Image.file(
+                          fit: BoxFit.cover,
+                          height: 72,
+                          width: 72,
+                          widget.vmEditPerson.image!,
+                        ),
+                      )),
       ),
     );
   }

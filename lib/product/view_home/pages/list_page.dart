@@ -1,7 +1,7 @@
 import 'package:azlistview/azlistview.dart';
 import 'package:flutter/material.dart';
 import 'package:phonediretory2/core/models/response_model.dart/person_response_model.dart';
-import 'package:phonediretory2/core/service/client/rest_client.dart';
+import 'package:phonediretory2/widgets/person_photo_circle.dart';
 import 'package:provider/provider.dart';
 import '../../../shared/asset_paths/icon_paths.dart';
 import '../../../shared/colors/uicolors.dart';
@@ -75,17 +75,11 @@ final class CustomListTle extends StatelessWidget {
             child: Row(
               children: [
                 CircleAvatar(
-                  child: person.photoUrl == null
-                      ? SizedBox()
-                      : ClipOval(
-                          child: Image.network(
-                            height: 30,
-                            width: 30,
-                            fit: BoxFit.cover,
-                            servicePhotoUrl + person.photoUrl!,
-                          ),
-                        ),
                   backgroundColor: UIColors.lightBlue,
+                  child: person.photoUrl == null
+                      ? const SizedBox()
+                      : PersonPhotoCircle(
+                          photoUrl: person.photoUrl!, radius: 30),
                 ),
                 Text(person.fullName ?? "UnNamed"),
               ],

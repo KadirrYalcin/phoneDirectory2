@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:phonediretory2/core/models/response_model.dart/person_response_model.dart';
 import 'package:phonediretory2/core/service/functions/person_service_functions.dart';
 import 'package:phonediretory2/widgets/toast_widget.dart';
-
-import '../core/models/person_model.dart';
-import '../main.dart';
 import '../shared/colors/uicolors.dart';
 import '../shared/fonts/text_styles.dart';
 import '../shared/strings/strings.dart';
@@ -37,6 +34,7 @@ class DeleteAlertDialog extends StatelessWidget {
             try {
               await PersonServiceFunctions().deletePerson(person.id!);
 
+              // ignore: use_build_context_synchronously
               Navigator.pushReplacementNamed(context, "/home");
             } catch (e) {
               showToastMessage("Kişi silme bşarısıız");

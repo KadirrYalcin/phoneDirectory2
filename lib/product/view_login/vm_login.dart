@@ -37,6 +37,7 @@ class VMLogin extends ChangeNotifier {
       prefs.setString(PrefsKeys.userPassword, "");
       prefs.setString(PrefsKeys.userEmail, "");
       prefs.setString(PrefsKeys.userToken, "");
+      notifyListeners();
     }
     notifyListeners();
   }

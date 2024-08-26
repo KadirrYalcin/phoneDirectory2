@@ -11,7 +11,7 @@ class ViewHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    context.watch<VMHome>().updatelist();
+    context.read<VMHome>().updatelist();
     return Scaffold(
       appBar: _Appbar(),
       body: SafeArea(

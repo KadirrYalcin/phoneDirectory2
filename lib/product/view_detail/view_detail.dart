@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:phonediretory2/core/models/person_model.dart';
 import 'package:phonediretory2/core/models/response_model.dart/person_response_model.dart';
-import 'package:phonediretory2/core/service/client/rest_client.dart';
 import 'package:phonediretory2/product/view_detail/vm_detail.dart';
 import 'package:phonediretory2/shared/asset_paths/icon_paths.dart';
 import 'package:phonediretory2/shared/colors/uicolors.dart';
 import 'package:phonediretory2/shared/fonts/text_styles.dart';
 import 'package:phonediretory2/shared/strings/strings.dart';
-
-import '../../shared/asset_paths/image_paths.dart';
+import 'package:phonediretory2/widgets/person_photo_circle.dart';
 
 class ViewPersonDetail extends StatefulWidget {
   const ViewPersonDetail({super.key});
@@ -198,14 +195,7 @@ final class PersonPhotoCard extends StatelessWidget {
             radius: 36,
             child: person.photoUrl == null
                 ? null
-                : ClipOval(
-                    child: Image.network(
-                      servicePhotoUrl + person.photoUrl!,
-                      fit: BoxFit.cover,
-                      width: 72,
-                      height: 72,
-                    ),
-                  ),
+                : PersonPhotoCircle(photoUrl: person.photoUrl!, radius: 72),
           ),
           const SizedBox(
             height: 12,
